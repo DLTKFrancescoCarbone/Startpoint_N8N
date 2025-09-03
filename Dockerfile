@@ -10,14 +10,14 @@ WORKDIR /home/node/.n8n/custom
 # Copy package files first to leverage Docker build cache
 COPY package*.json ./
 
-# Install production dependencies only
-RUN npm install --production --silent
+# Install all dependencies (including devDependencies for building)
+RUN npm install --silent
 
-# Copy the compiled distribution files
-COPY dist/ ./dist/
+# Copy source files for building
+COPY . .
 
-# Copy additional files needed for the node
-COPY index.js ./
+# Build the project (compile TypeScript)
+RUN npm run build
 
 # Set proper ownership of the custom node files
 RUN chown -R node:node /home/node/.n8n/custom
