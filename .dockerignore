@@ -10,16 +10,16 @@ coverage/
 .eslintcache
 *.tsbuildinfo
 
-# TypeScript source files (we only need compiled dist)
-nodes/**/*.ts
-credentials/**/*.ts
+# TypeScript sources are needed for Docker build
+!nodes/**/*.ts
+!credentials/**/*.ts
 !dist/
 
 # Development tools
 .eslintrc.js
 .eslintrc.prepublish.js
-tsconfig.json
-gulpfile.js
+!tsconfig.json
+!gulpfile.js
 
 # Documentation and non-essential files
 *.md
