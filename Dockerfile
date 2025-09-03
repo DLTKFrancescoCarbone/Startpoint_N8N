@@ -5,19 +5,22 @@ FROM n8nio/n8n:latest
 USER root
 
 # Set the working directory for the custom node installation
-WORKDIR /home/node/.n8n/custom
+WORKDIR /home/node/.n8n/custom/Startpoint_node
 
 # Copy package files first to leverage Docker build cache
-COPY package*.json package-lock.json ./
+COPY Startpoint_node/package*.json ./
 
 # Install all dependencies (including devDependencies for building)
-RUN npm ci --include=dev --silent
+RUN npm install --include=dev --silent
 
 # Copy source files for building
-COPY . .
+COPY Startpoint_node/. .
 
 # Build the project (compile TypeScript)
 RUN npm run build
+
+# Remove dev dependencies for a leaner runtime image
+RUN npm prune --omit=dev --silent
 
 # Set proper ownership of the custom node files
 RUN chown -R node:node /home/node/.n8n/custom
