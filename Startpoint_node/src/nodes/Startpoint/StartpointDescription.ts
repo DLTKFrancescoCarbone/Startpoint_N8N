@@ -488,12 +488,12 @@ export const startpointFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		routing: {
-			send: {
-				type: 'qs',
-				property: 'projectId',
-			},
+	routing: {
+		send: {
+			type: 'query',
+			property: 'projectId',
 		},
+	},
 		description: 'The ID of the project',
 	},
 	{
