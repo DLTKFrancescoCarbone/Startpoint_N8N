@@ -8,10 +8,10 @@ USER root
 WORKDIR /home/node/.n8n/custom
 
 # Copy package files first to leverage Docker build cache
-COPY package*.json ./
+COPY package*.json package-lock.json ./
 
 # Install all dependencies (including devDependencies for building)
-RUN npm install --silent
+RUN npm ci --include=dev --silent
 
 # Copy source files for building
 COPY . .
