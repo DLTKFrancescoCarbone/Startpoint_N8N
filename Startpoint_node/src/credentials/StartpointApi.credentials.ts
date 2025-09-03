@@ -8,7 +8,7 @@ import {
 export class StartpointApi implements ICredentialType {
 	name = 'startpointApi';
 	displayName = 'Startpoint API';
-	documentationUrl = 'https://fc-smb-poc-backend-production.up.railway.app';
+	documentationUrl = 'https://docs.n8n.io/integrations/community-nodes/';
 	properties: INodeProperties[] = [
 		{
 			displayName: 'API Token',
@@ -25,7 +25,7 @@ export class StartpointApi implements ICredentialType {
 			displayName: 'Base URL',
 			name: 'baseUrl',
 			type: 'string',
-			default: 'https://fc-smb-poc-backend-production.up.railway.app',
+			default: '',
 			required: true,
 			description: 'Base URL for the Startpoint API',
 		},

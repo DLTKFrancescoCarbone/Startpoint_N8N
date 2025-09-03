@@ -446,32 +446,6 @@ export const startpointOperations: INodeProperties[] = [
 		],
 		default: 'getAll',
 	},
-	{
-		displayName: 'Operation',
-		name: 'operation',
-		type: 'options',
-		noDataExpression: true,
-		displayOptions: {
-			show: {
-				resource: ['client', 'employee', 'phase', 'project', 'task'],
-			},
-		},
-		options: [
-			{
-				name: 'Get Many',
-				value: 'getAll',
-				description: 'Get many items',
-				action: 'Get many items',
-				routing: {
-					request: {
-						method: 'GET',
-						url: '=/api/{{$parameter["resource"]}}',
-					},
-				},
-			},
-		],
-		default: 'getAll',
-	},
 ];
 
 // Resource fields - define field behaviors and routing
