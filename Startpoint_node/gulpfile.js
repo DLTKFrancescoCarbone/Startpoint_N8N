@@ -5,12 +5,13 @@ task('build:icons', copyIcons);
 
 function copyIcons() {
 	const nodeSource = path.resolve('src', 'nodes', '**', '*.{png,svg}');
-	const nodeDestination = path.resolve('dist', 'nodes');
+	// Match TypeScript outDir structure (dist/src/**) so icons sit next to compiled JS
+	const nodeDestination = path.resolve('dist', 'src', 'nodes');
 
 	src(nodeSource).pipe(dest(nodeDestination));
 
 	const credSource = path.resolve('src', 'credentials', '**', '*.{png,svg}');
-	const credDestination = path.resolve('dist', 'credentials');
+	const credDestination = path.resolve('dist', 'src', 'credentials');
 
 	return src(credSource).pipe(dest(credDestination));
 }
