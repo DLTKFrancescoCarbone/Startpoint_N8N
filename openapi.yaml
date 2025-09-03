@@ -1,0 +1,797 @@
+openapi: 3.0.0
+info:
+  title: FC SMB POC Backend API
+  version: 1.0.0
+  description: |
+    **Startpoint ERP Project Data Model POC** - Backend API for managing projects, phases, tasks, team assignments, timesheets, and reference data
+
+    ## Authentication
+    All API endpoints require a Bearer token in the Authorization header:
+    ```
+    Authorization: Bearer your-api-token-here
+    ```
+
+    ## Features
+    - **3-Level Project Hierarchy**: Projects → Phases → Tasks
+    - **Team Management**: Role-based team member assignments  
+    - **Timesheet System**: Comprehensive time tracking with approval workflows
+    - **Client Management**: Enhanced client information with contact details
+    - **Reference Data**: Disciplines, rate tables, and system metadata
+
+    ## Business Rules
+    - Projects require client assignments
+    - Role-based team member management with unique assignments per project
+    - Timesheet approval workflows (Draft → Submitted → Approved/Rejected)
+    - Flexible time entry tracking at project, phase, or task level
+    - Project numbers are auto-generated with P-prefix format (P1234)
+    - Audit fields (created_by/updated_by) store user IDs as strings without foreign key constraints
+
+  contact:
+    name: FC SMB POC Team
+
+servers:
+  - url: https://fc-smb-poc-backend-production.up.railway.app
+    description: Production server (Railway)
+  - url: http://localhost:3000
+    description: Development server
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # Core Business Entities
+    Project:
+      type: object
+      required: [id, projectNumber, name, createdBy, updatedBy]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the project
+        projectNumber:
+          type: string
+          maxLength: 20
+          description: Project number (auto-generated if not provided, format P####)
+          example: "P1234"
+        name:
+          type: string
+          maxLength: 200
+          description: Project name
+        description:
+          type: string
+          description: Project description
+        status:
+          type: string
+          enum: [ACTIVE, INACTIVE]
+          default: ACTIVE
+          description: Project status
+        clientId:
+          type: string
+          format: uuid
+          description: Client ID
+        projectType:
+          type: string
+          enum: [SMALL_RENOVATION, LARGE_RENOVATION, NEW_CONSTRUCTION, COMMERCIAL_FIT_OUT, COMMERCIAL_NEW_BUILD, OTHER]
+          description: Project type category
+        primaryDisciplineId:
+          type: string
+          format: uuid
+          description: Primary discipline ID
+        invoiceFormat:
+          type: string
+          enum: [TIME_AND_MATERIALS, FIXED_FEE, COST_PLUS_FIXED_FEE, COST_PLUS_PERCENTAGE, UNIT_PRICE, OTHER]
+          description: Invoice format type
+        rateTableId:
+          type: string
+          format: uuid
+          description: Rate table ID
+        projectManagerId:
+          type: string
+          format: uuid
+          description: Project manager employee ID
+        principalInChargeId:
+          type: string
+          format: uuid
+          description: Principal in charge employee ID
+        marketingContactId:
+          type: string
+          format: uuid
+          description: Marketing contact employee ID
+        billingManagerId:
+          type: string
+          format: uuid
+          description: Billing manager employee ID
+        totalContractAmount:
+          type: number
+          format: decimal
+          description: Total contract amount
+        estimatedStartDate:
+          type: string
+          format: date
+          description: Estimated start date
+        estimatedEndDate:
+          type: string
+          format: date
+          description: Estimated end date
+        location:
+          type: string
+          description: Project location
+        notes:
+          type: string
+          description: Project notes
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        createdBy:
+          type: string
+          description: User ID who created this project (string field, no FK constraint)
+        updatedBy:
+          type: string
+          description: User ID who last updated this project (string field, no FK constraint)
+
+    Client:
+      type: object
+      required: [id, clientNumber, name]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the client
+        clientNumber:
+          type: string
+          maxLength: 10
+          description: Auto-generated client number with C-prefix
+          example: "C1234"
+        name:
+          type: string
+          maxLength: 200
+          description: Client company name
+        industry:
+          type: string
+          enum: [RESIDENTIAL_DEVELOPER, COMMERCIAL_REAL_ESTATE, HEALTHCARE, EDUCATION, HOSPITALITY, RETAIL, INDUSTRIAL_MANUFACTURING, GOVERNMENT, NON_PROFIT, TECHNOLOGY, FINANCIAL_SERVICES, OTHER]
+          description: Client industry
+        companySize:
+          type: string
+          enum: [SMALL, MEDIUM, LARGE, ENTERPRISE]
+          description: Company size classification
+        status:
+          type: string
+          default: active
+          description: Client status
+        description:
+          type: string
+          description: Client description
+        website:
+          type: string
+          maxLength: 255
+          description: Client website URL
+        taxId:
+          type: string
+          maxLength: 50
+          description: Tax identification number
+        primaryContactName:
+          type: string
+          maxLength: 100
+          description: Primary contact name
+        primaryContactEmail:
+          type: string
+          maxLength: 255
+          format: email
+          description: Primary contact email
+        primaryContactPhone:
+          type: string
+          maxLength: 50
+          description: Primary contact phone
+        primaryContactRole:
+          type: string
+          maxLength: 100
+          description: Primary contact role/title
+        addressLine1:
+          type: string
+          maxLength: 255
+          description: Address line 1
+        addressLine2:
+          type: string
+          maxLength: 255
+          description: Address line 2
+        city:
+          type: string
+          maxLength: 100
+          description: City
+        state:
+          type: string
+          maxLength: 100
+          description: State/Province
+        postalCode:
+          type: string
+          maxLength: 20
+          description: Postal/ZIP code
+        country:
+          type: string
+          maxLength: 100
+          description: Country
+        billingContactName:
+          type: string
+          maxLength: 100
+          description: Billing contact name
+        billingContactEmail:
+          type: string
+          maxLength: 255
+          format: email
+          description: Billing contact email
+        billingContactPhone:
+          type: string
+          maxLength: 50
+          description: Billing contact phone
+        notes:
+          type: string
+          description: Additional notes
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    Employee:
+      type: object
+      required: [id, employeeNumber, name, createdBy, updatedBy]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the employee
+        employeeNumber:
+          type: string
+          maxLength: 10
+          description: Auto-generated alphanumeric employee number
+          example: "A1B2C"
+        name:
+          type: string
+          maxLength: 100
+          description: Employee full name
+        email:
+          type: string
+          maxLength: 255
+          format: email
+          description: Employee email address
+        status:
+          type: string
+          enum: [ACTIVE, INACTIVE]
+          default: ACTIVE
+          description: Employee status
+        isProjectManager:
+          type: boolean
+          default: false
+          description: Whether employee can serve as Project Manager
+        isPrincipal:
+          type: boolean
+          default: false
+          description: Whether employee can serve as Principal in Charge
+        isMarketing:
+          type: boolean
+          default: false
+          description: Whether employee can serve as Marketing Contact
+        primaryDisciplineId:
+          type: string
+          format: uuid
+          description: Primary discipline ID
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        createdBy:
+          type: string
+          description: User ID who created this employee (string field, no FK constraint)
+        updatedBy:
+          type: string
+          description: User ID who last updated this employee (string field, no FK constraint)
+
+    Discipline:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the discipline
+        name:
+          type: string
+          maxLength: 100
+          description: Discipline name
+        description:
+          type: string
+          description: Discipline description
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+
+    Phase:
+      type: object
+      required: [id, projectId, name, createdBy, updatedBy]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the phase
+        projectId:
+          type: string
+          format: uuid
+          description: Project ID this phase belongs to
+        name:
+          type: string
+          maxLength: 200
+          description: Phase name
+        description:
+          type: string
+          description: Phase description
+        status:
+          type: integer
+          default: 0
+          description: Phase status code
+        displayOrder:
+          type: integer
+          default: 1
+          description: Display order within project
+        budgetAllocationPercent:
+          type: number
+          format: decimal
+          description: Budget allocation percentage
+        estimatedHours:
+          type: number
+          format: decimal
+          description: Estimated hours for phase
+        phaseBudget:
+          type: number
+          format: decimal
+          description: Phase budget amount
+        notes:
+          type: string
+          description: Phase notes
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        createdBy:
+          type: string
+          description: User ID who created this phase (string field, no FK constraint)
+        updatedBy:
+          type: string
+          description: User ID who last updated this phase (string field, no FK constraint)
+
+    Task:
+      type: object
+      required: [id, phaseId, name, createdBy, updatedBy]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the task
+        phaseId:
+          type: string
+          format: uuid
+          description: Phase ID this task belongs to
+        name:
+          type: string
+          maxLength: 200
+          description: Task name
+        description:
+          type: string
+          description: Task description
+        status:
+          type: integer
+          default: 0
+          description: Task status code
+        displayOrder:
+          type: integer
+          default: 1
+          description: Display order within phase
+        estimatedHours:
+          type: number
+          format: decimal
+          description: Estimated hours for task
+        actualHours:
+          type: number
+          format: decimal
+          description: Actual hours logged
+        taskBudget:
+          type: number
+          format: decimal
+          description: Task budget amount
+        notes:
+          type: string
+          description: Task notes
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        createdBy:
+          type: string
+          description: User ID who created this task (string field, no FK constraint)
+        updatedBy:
+          type: string
+          description: User ID who last updated this task (string field, no FK constraint)
+
+    # Response Wrappers
+    SuccessResponse:
+      type: object
+      required: [success]
+      properties:
+        success:
+          type: boolean
+          example: true
+          description: Always true for successful responses
+        data:
+          description: Response data (structure varies by endpoint)
+        message:
+          type: string
+          description: Optional success message
+
+    ErrorResponse:
+      type: object
+      required: [success, error]
+      properties:
+        success:
+          type: boolean
+          example: false
+          description: Always false for error responses
+        error:
+          type: string
+          description: Error message describing what went wrong
+        code:
+          type: string
+          description: Optional error code for programmatic handling
+
+    PaginatedResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                total:
+                  type: integer
+                  description: Total number of items (for paginated responses)
+                pageSize:
+                  type: integer
+                  description: Number of items per page
+                page:
+                  type: integer
+                  description: Current page number
+                hasMore:
+                  type: boolean
+                  description: Whether there are more pages available
+
+  responses:
+    BadRequest:
+      description: Bad Request - Invalid input data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: Invalid hierarchy level. Must be between 1 and 3
+            code: INVALID_HIERARCHY_LEVEL
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: WBS item not found
+            code: WBS_NOT_FOUND
+
+    Conflict:
+      description: Resource conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: Project Manager role already assigned to another team member for this WBS item
+            code: PM_ROLE_ALREADY_ASSIGNED
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: Internal server error
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      tags: [System]
+      security: []
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /api/projects:
+    get:
+      summary: Get all projects
+      tags: [Projects]
+      parameters:
+        - in: query
+          name: include
+          schema:
+            type: string
+          description: Include related data (client,primaryDiscipline,projectManager,etc.)
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Project'
+
+    post:
+      summary: Create a new project
+      tags: [Projects]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                projectNumber:
+                  type: string
+                  description: Project number (auto-generated if not provided)
+                name:
+                  type: string
+                  description: Project name
+                description:
+                  type: string
+                clientId:
+                  type: string
+                  format: uuid
+                clientNumber:
+                  type: string
+                  description: Alternative to clientId - lookup client by number
+                status:
+                  type: string
+                  enum: [ACTIVE, INACTIVE]
+                projectType:
+                  type: string
+                  enum: [SMALL_RENOVATION, LARGE_RENOVATION, NEW_CONSTRUCTION, COMMERCIAL_FIT_OUT, COMMERCIAL_NEW_BUILD, OTHER]
+                primaryDisciplineId:
+                  type: string
+                  format: uuid
+                invoiceFormat:
+                  type: string
+                  enum: [TIME_AND_MATERIALS, FIXED_FEE, COST_PLUS_FIXED_FEE, COST_PLUS_PERCENTAGE, UNIT_PRICE, OTHER]
+                totalContractAmount:
+                  type: number
+                estimatedStartDate:
+                  type: string
+                  format: date
+                estimatedEndDate:
+                  type: string
+                  format: date
+                location:
+                  type: string
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Project created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/projects/{id}:
+    get:
+      summary: Get project by ID
+      tags: [Projects]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: include
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Project'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/clients:
+    get:
+      summary: Get all clients
+      tags: [Clients]
+      responses:
+        '200':
+          description: List of clients
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Client'
+
+    post:
+      summary: Create a new client
+      tags: [Clients]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                clientNumber:
+                  type: string
+                  description: Client number (auto-generated if not provided)
+                name:
+                  type: string
+                industry:
+                  type: string
+                  enum: [RESIDENTIAL_DEVELOPER, COMMERCIAL_REAL_ESTATE, HEALTHCARE, EDUCATION, HOSPITALITY, RETAIL, INDUSTRIAL_MANUFACTURING, GOVERNMENT, NON_PROFIT, TECHNOLOGY, FINANCIAL_SERVICES, OTHER]
+                companySize:
+                  type: string
+                  enum: [SMALL, MEDIUM, LARGE, ENTERPRISE]
+                primaryContactName:
+                  type: string
+                primaryContactEmail:
+                  type: string
+                  format: email
+                website:
+                  type: string
+                addressLine1:
+                  type: string
+                addressLine2:
+                  type: string
+                city:
+                  type: string
+                state:
+                  type: string
+                country:
+                  type: string
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Client created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Client'
+
+  /api/employees:
+    get:
+      summary: Get all employees
+      tags: [Employees]
+      responses:
+        '200':
+          description: List of employees
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Employee'
+
+  /api/disciplines:
+    get:
+      summary: Get all disciplines
+      tags: [Disciplines]
+      responses:
+        '200':
+          description: List of disciplines
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Discipline'
+
+tags:
+  - name: System
+    description: System health and status endpoints
+  - name: Projects
+    description: Project management (top-level hierarchy)
+  - name: Clients
+    description: Client management
+  - name: Employees
+    description: Employee management
+  - name: Disciplines
+    description: Discipline/department management
+  - name: Phases
+    description: Phase management (project sub-components)
+  - name: Tasks
+    description: Task management (phase sub-components)

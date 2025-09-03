@@ -1,0 +1,43 @@
+# Node modules and package files
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Development and build artifacts
+.nyc_output
+coverage/
+.eslintcache
+*.tsbuildinfo
+
+# TypeScript source files (we only need compiled dist)
+nodes/**/*.ts
+credentials/**/*.ts
+!dist/
+
+# Development tools
+.eslintrc.js
+.eslintrc.prepublish.js
+tsconfig.json
+gulpfile.js
+
+# Documentation and non-essential files
+*.md
+CLAUDE.md
+ARCHITECTURE_PLAN.md
+openapi.yaml
+
+# Git and IDE files
+.git/
+.gitignore
+.vscode/
+.idea/
+.claude/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
