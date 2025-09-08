@@ -112,18 +112,6 @@ export const startpointOperations: INodeProperties[] = [
         },
       },
       {
-        name: "Get",
-        value: "get",
-        description: "Get a client by ID",
-        action: "Get a client",
-        routing: {
-          request: {
-            method: "GET",
-            url: '=/api/clients/{{$parameter["clientId"]}}',
-          },
-        },
-      },
-      {
         name: "Get Many",
         value: "getAll",
         description: "Get many clients",
@@ -186,18 +174,6 @@ export const startpointOperations: INodeProperties[] = [
         },
       },
       {
-        name: "Get",
-        value: "get",
-        description: "Get an employee by ID",
-        action: "Get an employee",
-        routing: {
-          request: {
-            method: "GET",
-            url: '=/api/employees/{{$parameter["employeeId"]}}',
-          },
-        },
-      },
-      {
         name: "Get Many",
         value: "getAll",
         description: "Get many employees",
@@ -243,7 +219,7 @@ export const startpointOperations: INodeProperties[] = [
         routing: {
           request: {
             method: "POST",
-            url: "/api/phases",
+            url: '=/api/projects/{{$parameter["projectId"]}}/phases',
           },
         },
       },
@@ -255,7 +231,8 @@ export const startpointOperations: INodeProperties[] = [
         routing: {
           request: {
             method: "DELETE",
-            url: '=/api/phases/{{$parameter["phaseId"]}}',
+            url:
+              '=/api/projects/{{$parameter["projectId"]}}/phases/{{$parameter["phaseId"]}}',
           },
         },
       },
@@ -267,7 +244,8 @@ export const startpointOperations: INodeProperties[] = [
         routing: {
           request: {
             method: "GET",
-            url: '=/api/phases/{{$parameter["phaseId"]}}',
+            url:
+              '=/api/projects/{{$parameter["projectId"]}}/phases/{{$parameter["phaseId"]}}',
           },
         },
       },
@@ -279,7 +257,7 @@ export const startpointOperations: INodeProperties[] = [
         routing: {
           request: {
             method: "GET",
-            url: "/api/phases",
+            url: '=/api/projects/{{$parameter["projectId"]}}/phases',
           },
         },
       },
@@ -291,7 +269,8 @@ export const startpointOperations: INodeProperties[] = [
         routing: {
           request: {
             method: "PUT",
-            url: '=/api/phases/{{$parameter["phaseId"]}}',
+            url:
+              '=/api/projects/{{$parameter["projectId"]}}/phases/{{$parameter["phaseId"]}}',
           },
         },
       },
@@ -317,7 +296,8 @@ export const startpointOperations: INodeProperties[] = [
         routing: {
           request: {
             method: "POST",
-            url: "/api/tasks",
+            url:
+              '=/api/projects/{{$parameter["projectId"]}}/phases/{{$parameter["phaseId"]}}/tasks',
           },
         },
       },
@@ -329,7 +309,8 @@ export const startpointOperations: INodeProperties[] = [
         routing: {
           request: {
             method: "DELETE",
-            url: '=/api/tasks/{{$parameter["taskId"]}}',
+            url:
+              '=/api/projects/{{$parameter["projectId"]}}/phases/{{$parameter["phaseId"]}}/tasks/{{$parameter["taskId"]}}',
           },
         },
       },
@@ -341,7 +322,8 @@ export const startpointOperations: INodeProperties[] = [
         routing: {
           request: {
             method: "GET",
-            url: '=/api/tasks/{{$parameter["taskId"]}}',
+            url:
+              '=/api/projects/{{$parameter["projectId"]}}/phases/{{$parameter["phaseId"]}}/tasks/{{$parameter["taskId"]}}',
           },
         },
       },
@@ -353,7 +335,8 @@ export const startpointOperations: INodeProperties[] = [
         routing: {
           request: {
             method: "GET",
-            url: "/api/tasks",
+            url:
+              '=/api/projects/{{$parameter["projectId"]}}/phases/{{$parameter["phaseId"]}}/tasks',
           },
         },
       },
@@ -365,7 +348,8 @@ export const startpointOperations: INodeProperties[] = [
         routing: {
           request: {
             method: "PUT",
-            url: '=/api/tasks/{{$parameter["taskId"]}}',
+            url:
+              '=/api/projects/{{$parameter["projectId"]}}/phases/{{$parameter["phaseId"]}}/tasks/{{$parameter["taskId"]}}',
           },
         },
       },
@@ -408,18 +392,6 @@ export const startpointOperations: INodeProperties[] = [
         },
       },
       {
-        name: "Get",
-        value: "get",
-        description: "Get a discipline by ID",
-        action: "Get a discipline",
-        routing: {
-          request: {
-            method: "GET",
-            url: '=/api/disciplines/{{$parameter["disciplineId"]}}',
-          },
-        },
-      },
-      {
         name: "Get Many",
         value: "getAll",
         description: "Get many disciplines",
@@ -440,6 +412,56 @@ export const startpointOperations: INodeProperties[] = [
           request: {
             method: "PUT",
             url: '=/api/disciplines/{{$parameter["disciplineId"]}}',
+          },
+        },
+      },
+    ],
+    default: "getAll",
+  },
+  {
+    displayName: "Operation",
+    name: "operation",
+    type: "options",
+    noDataExpression: true,
+    displayOptions: {
+      show: {
+        resource: ["team"],
+      },
+    },
+    options: [
+      {
+        name: "Get Many",
+        value: "getAll",
+        description: "List project team members",
+        action: "Get team members",
+        routing: {
+          request: {
+            method: "GET",
+            url: '=/api/projects/{{$parameter["projectId"]}}/team',
+          },
+        },
+      },
+      {
+        name: "Create",
+        value: "create",
+        description: "Add team member to project",
+        action: "Add team member",
+        routing: {
+          request: {
+            method: "POST",
+            url: '=/api/projects/{{$parameter["projectId"]}}/team',
+          },
+        },
+      },
+      {
+        name: "Delete",
+        value: "delete",
+        description: "Remove team member from project",
+        action: "Remove team member",
+        routing: {
+          request: {
+            method: "DELETE",
+            url: '=/api/projects/{{$parameter["projectId"]}}/team/{{$parameter["memberId"]}}',
           },
         },
       },
@@ -470,10 +492,453 @@ export const startpointFields: INodeProperties[] = [
     },
     description: "The ID of the project",
   },
+  // Phase fields
+  {
+    displayName: "Phase ID",
+    name: "phaseId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["phase"],
+        operation: ["delete", "get", "update"],
+      },
+    },
+    default: "",
+    description: "The ID of the phase",
+  },
+  {
+    displayName: "Project ID",
+    name: "projectId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["phase"],
+        operation: ["create", "update", "get", "delete", "getAll"],
+      },
+    },
+    default: "",
+    description: "Project UUID this phase belongs to (path parameter)",
+  },
+  {
+    displayName: "Phase Name",
+    name: "name",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["phase"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "name",
+      },
+    },
+    description: "Name of the phase",
+  },
+  {
+    displayName: "Description",
+    name: "description",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["phase"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "description",
+      },
+    },
+    description: "Phase description",
+  },
+  {
+    displayName: "Status Code",
+    name: "status",
+    type: "number",
+    typeOptions: { minValue: 0 },
+    displayOptions: {
+      show: {
+        resource: ["phase"],
+        operation: ["update"],
+      },
+    },
+    default: 0,
+    routing: {
+      send: {
+        type: "body",
+        property: "status",
+      },
+    },
+    description: "Phase status code (integer)",
+  },
+  {
+    displayName: "Display Order",
+    name: "displayOrder",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["phase"],
+        operation: ["create", "update"],
+      },
+    },
+    default: 1,
+    routing: {
+      send: {
+        type: "body",
+        property: "displayOrder",
+      },
+    },
+    description: "Order within the project",
+  },
+  {
+    displayName: "Budget Allocation %",
+    name: "budgetAllocationPercent",
+    type: "number",
+    typeOptions: { minValue: 0 },
+    displayOptions: {
+      show: {
+        resource: ["phase"],
+        operation: ["create", "update"],
+      },
+    },
+    default: 0,
+    routing: {
+      send: {
+        type: "body",
+        property: "budgetAllocationPercent",
+      },
+    },
+    description: "Budget allocation percentage for the phase",
+  },
+  {
+    displayName: "Estimated Hours",
+    name: "estimatedHours",
+    type: "number",
+    typeOptions: { minValue: 0 },
+    displayOptions: {
+      show: {
+        resource: ["phase"],
+        operation: ["create", "update"],
+      },
+    },
+    default: 0,
+    routing: {
+      send: {
+        type: "body",
+        property: "estimatedHours",
+      },
+    },
+    description: "Estimated hours for the phase",
+  },
+  {
+    displayName: "Phase Budget",
+    name: "phaseBudget",
+    type: "number",
+    typeOptions: { minValue: 0 },
+    displayOptions: {
+      show: {
+        resource: ["phase"],
+        operation: ["create", "update"],
+      },
+    },
+    default: 0,
+    routing: {
+      send: {
+        type: "body",
+        property: "phaseBudget",
+      },
+    },
+    description: "Budget amount for the phase",
+  },
+  {
+    displayName: "Notes",
+    name: "notes",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["phase"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "notes",
+      },
+    },
+    description: "Additional notes for the phase",
+  },
+
+  // Task fields
+  {
+    displayName: "Task ID",
+    name: "taskId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["delete", "get", "update"],
+      },
+    },
+    default: "",
+    description: "The ID of the task",
+  },
+  {
+    displayName: "Project ID",
+    name: "projectId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["create", "update", "get", "delete", "getAll"],
+      },
+    },
+    default: "",
+    description: "Project UUID (path parameter)",
+  },
+  {
+    displayName: "Phase ID",
+    name: "phaseId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["create", "update", "get", "delete", "getAll"],
+      },
+    },
+    default: "",
+    description: "Phase UUID (path parameter)",
+  },
+  // Task list filters
+  {
+    displayName: "Search",
+    name: "search",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["getAll"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "query",
+        property: "search",
+      },
+    },
+    description: "Search tasks by name (case-insensitive substring)",
+  },
+  {
+    displayName: "Page",
+    name: "page",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["getAll"],
+      },
+    },
+    default: 1,
+    routing: {
+      send: {
+        type: "query",
+        property: "page",
+      },
+    },
+    description: "Page number for task listing",
+  },
+  {
+    displayName: "Limit",
+    name: "limit",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["getAll"],
+      },
+    },
+    default: 50,
+    routing: {
+      send: {
+        type: "query",
+        property: "limit",
+      },
+    },
+    description: "Items per page for task listing",
+  },
+  {
+    displayName: "Task Name",
+    name: "name",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "name",
+      },
+    },
+    description: "Name of the task",
+  },
+  {
+    displayName: "Description",
+    name: "description",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "description",
+      },
+    },
+    description: "Task description",
+  },
+  {
+    displayName: "Status Code",
+    name: "status",
+    type: "number",
+    typeOptions: { minValue: 0 },
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["create", "update"],
+      },
+    },
+    default: 0,
+    routing: {
+      send: {
+        type: "body",
+        property: "status",
+      },
+    },
+    description: "Task status code (integer)",
+  },
+  {
+    displayName: "Display Order",
+    name: "displayOrder",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["create", "update"],
+      },
+    },
+    default: 1,
+    routing: {
+      send: {
+        type: "body",
+        property: "displayOrder",
+      },
+    },
+    description: "Order within the phase",
+  },
+  {
+    displayName: "Estimated Hours",
+    name: "estimatedHours",
+    type: "number",
+    typeOptions: { minValue: 0 },
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["create", "update"],
+      },
+    },
+    default: 0,
+    routing: {
+      send: {
+        type: "body",
+        property: "estimatedHours",
+      },
+    },
+    description: "Estimated hours for the task",
+  },
+  {
+    displayName: "Actual Hours",
+    name: "actualHours",
+    type: "number",
+    typeOptions: { minValue: 0 },
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["update"],
+      },
+    },
+    default: 0,
+    routing: {
+      send: {
+        type: "body",
+        property: "actualHours",
+      },
+    },
+    description: "Actual hours logged",
+  },
+  {
+    displayName: "Task Budget",
+    name: "taskBudget",
+    type: "number",
+    typeOptions: { minValue: 0 },
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["create", "update"],
+      },
+    },
+    default: 0,
+    routing: {
+      send: {
+        type: "body",
+        property: "taskBudget",
+      },
+    },
+    description: "Budget amount for the task",
+  },
+  {
+    displayName: "Notes",
+    name: "notes",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["task"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "notes",
+      },
+    },
+    description: "Additional notes for the task",
+  },
   {
     displayName: "Project Name",
     name: "projectName",
     type: "string",
+    required: true,
     displayOptions: {
       show: {
         resource: ["project"],
@@ -484,10 +949,10 @@ export const startpointFields: INodeProperties[] = [
     routing: {
       send: {
         type: "body",
-        property: "projectName",
+        property: "name",
       },
     },
-    description: "Name of the project",
+    description: "Name of the project (required)",
   },
 
   // Project List Filters (for Get Many operation)
@@ -509,6 +974,71 @@ export const startpointFields: INodeProperties[] = [
       },
     },
     description: "Filter by exact project number (e.g., P0123)",
+  },
+  // Team fields
+  {
+    displayName: "Project ID",
+    name: "projectId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["team"],
+        operation: ["getAll", "create", "delete"],
+      },
+    },
+    default: "",
+    description: "Project UUID (path parameter)",
+  },
+  {
+    displayName: "Member ID",
+    name: "memberId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["team"],
+        operation: ["delete"],
+      },
+    },
+    default: "",
+    description: "Team member UUID to remove",
+  },
+  {
+    displayName: "Employee ID",
+    name: "employeeId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["team"],
+        operation: ["create"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "employeeId",
+      },
+    },
+    description: "Employee UUID to add to the project team",
+  },
+  {
+    displayName: "Role",
+    name: "role",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["team"],
+        operation: ["create"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "role",
+      },
+    },
+    description: "Role of the team member",
   },
   {
     displayName: "Project Name Filter",
