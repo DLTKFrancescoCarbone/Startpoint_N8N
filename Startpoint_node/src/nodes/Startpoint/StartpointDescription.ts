@@ -2716,34 +2716,6 @@ export const startpointFields: INodeProperties[] = [
     description: "Filter by project name (case-insensitive substring match)",
   },
   {
-    displayName: "Project Number",
-    name: "projectNumberFilter",
-    type: "string",
-    displayOptions: {
-      show: {
-        resource: ["project"],
-        operation: ["getAll"],
-      },
-    },
-    default: "",
-    routing: { send: { type: "query", property: "projectNumber" } },
-    description: "Exact match on project number (e.g., P0123)",
-  },
-  {
-    displayName: "Project Number",
-    name: "projectNumberFilter",
-    type: "string",
-    displayOptions: {
-      show: {
-        resource: ["project"],
-        operation: ["getAll"],
-      },
-    },
-    default: "",
-    routing: { send: { type: "query", property: "projectNumber" } },
-    description: "Exact match on project number (e.g., P0123)",
-  },
-  {
     displayName: "Client Number",
     name: "clientNumber",
     type: "string",
@@ -2834,9 +2806,10 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "query",
         property: "status",
+        value: '={{ $parameter.status !== "" ? $parameter.status : undefined }}',
       },
     },
-    description: "Filter by project status",
+    description: "Filter by project status (optional)",
   },
   {
     displayName: "Client ID",
