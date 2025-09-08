@@ -73,6 +73,42 @@ export const startpointOperations: INodeProperties[] = [
           },
         },
       },
+      {
+        name: "Get History",
+        value: "getHistory",
+        description: "Get project history",
+        action: "Get project history",
+        routing: {
+          request: {
+            method: "GET",
+            url: '=/api/projects/{{$parameter["projectId"]}}/history',
+          },
+        },
+      },
+      {
+        name: "Get At Timestamp",
+        value: "getAt",
+        description: "Get project state at a timestamp",
+        action: "Get project at timestamp",
+        routing: {
+          request: {
+            method: "GET",
+            url: '=/api/projects/{{$parameter["projectId"]}}/at',
+          },
+        },
+      },
+      {
+        name: "Get Diff",
+        value: "getDiff",
+        description: "Get diff between two timestamps",
+        action: "Get project diff",
+        routing: {
+          request: {
+            method: "GET",
+            url: '=/api/projects/{{$parameter["projectId"]}}/diff',
+          },
+        },
+      },
     ],
     default: "getAll",
   },
@@ -100,6 +136,18 @@ export const startpointOperations: INodeProperties[] = [
         },
       },
       {
+        name: "Get",
+        value: "get",
+        description: "Get a client by ID",
+        action: "Get a client",
+        routing: {
+          request: {
+            method: "GET",
+            url: '=/api/clients/{{$parameter["clientId"]}}',
+          },
+        },
+      },
+      {
         name: "Delete",
         value: "delete",
         description: "Delete a client",
@@ -120,6 +168,66 @@ export const startpointOperations: INodeProperties[] = [
           request: {
             method: "GET",
             url: "/api/clients",
+          },
+        },
+      },
+      {
+        name: "Get Industries",
+        value: "getIndustries",
+        description: "Get available client industries",
+        action: "Get client industries",
+        routing: {
+          request: {
+            method: "GET",
+            url: "/api/clients/meta/industries",
+          },
+        },
+      },
+      {
+        name: "Get Company Sizes",
+        value: "getCompanySizes",
+        description: "Get available company sizes",
+        action: "Get company sizes",
+        routing: {
+          request: {
+            method: "GET",
+            url: "/api/clients/meta/company-sizes",
+          },
+        },
+      },
+      {
+        name: "Get History",
+        value: "getHistory",
+        description: "Get client history",
+        action: "Get client history",
+        routing: {
+          request: {
+            method: "GET",
+            url: '=/api/clients/{{$parameter["clientId"]}}/history',
+          },
+        },
+      },
+      {
+        name: "Get At Timestamp",
+        value: "getAt",
+        description: "Get client state at a timestamp",
+        action: "Get client at timestamp",
+        routing: {
+          request: {
+            method: "GET",
+            url: '=/api/clients/{{$parameter["clientId"]}}/at',
+          },
+        },
+      },
+      {
+        name: "Get Diff",
+        value: "getDiff",
+        description: "Get diff between two timestamps",
+        action: "Get client diff",
+        routing: {
+          request: {
+            method: "GET",
+            url: '=/api/clients/{{$parameter["clientId"]}}/diff',
           },
         },
       },
@@ -162,6 +270,18 @@ export const startpointOperations: INodeProperties[] = [
         },
       },
       {
+        name: "Get",
+        value: "get",
+        description: "Get an employee by ID",
+        action: "Get an employee",
+        routing: {
+          request: {
+            method: "GET",
+            url: '=/api/employees/{{$parameter["employeeId"]}}',
+          },
+        },
+      },
+      {
         name: "Delete",
         value: "delete",
         description: "Delete an employee",
@@ -186,6 +306,30 @@ export const startpointOperations: INodeProperties[] = [
         },
       },
       {
+        name: "Get Capabilities",
+        value: "getCapabilities",
+        description: "Get employees filtered by role capabilities",
+        action: "Get employees by capabilities",
+        routing: {
+          request: {
+            method: "GET",
+            url: "/api/employees/roles/capabilities",
+          },
+        },
+      },
+      {
+        name: "Deactivate",
+        value: "deactivate",
+        description: "Deactivate an employee",
+        action: "Deactivate employee",
+        routing: {
+          request: {
+            method: "PATCH",
+            url: '=/api/employees/{{$parameter["employeeId"]}}/deactivate',
+          },
+        },
+      },
+      {
         name: "Update",
         value: "update",
         description: "Update an employee",
@@ -194,6 +338,18 @@ export const startpointOperations: INodeProperties[] = [
           request: {
             method: "PUT",
             url: '=/api/employees/{{$parameter["employeeId"]}}',
+          },
+        },
+      },
+      {
+        name: "Get History",
+        value: "getHistory",
+        description: "Get employee history",
+        action: "Get employee history",
+        routing: {
+          request: {
+            method: "GET",
+            url: '=/api/employees/{{$parameter["employeeId"]}}/history',
           },
         },
       },
@@ -380,6 +536,18 @@ export const startpointOperations: INodeProperties[] = [
         },
       },
       {
+        name: "Get",
+        value: "get",
+        description: "Get a discipline by ID",
+        action: "Get a discipline",
+        routing: {
+          request: {
+            method: "GET",
+            url: '=/api/disciplines/{{$parameter["disciplineId"]}}',
+          },
+        },
+      },
+      {
         name: "Delete",
         value: "delete",
         description: "Delete a discipline",
@@ -480,17 +648,99 @@ export const startpointFields: INodeProperties[] = [
     displayOptions: {
       show: {
         resource: ["project"],
-        operation: ["delete", "get", "update"],
+        operation: ["delete", "get", "update", "getHistory", "getAt", "getDiff"],
       },
     },
     default: "",
-    routing: {
-      send: {
-        type: "query",
-        property: "projectId",
+    description: "The ID of the project",
+  },
+  {
+    displayName: "Limit",
+    name: "projectHistoryLimit",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["getHistory"],
       },
     },
-    description: "The ID of the project",
+    default: 50,
+    routing: { send: { type: "query", property: "limit" } },
+    description: "Number of history entries to return",
+  },
+  {
+    displayName: "Since",
+    name: "projectHistorySince",
+    type: "dateTime",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["getHistory"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "since" } },
+    description: "Show events since this timestamp",
+  },
+  {
+    displayName: "Until",
+    name: "projectHistoryUntil",
+    type: "dateTime",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["getHistory"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "until" } },
+    description: "Show events until this timestamp",
+  },
+  {
+    displayName: "Timestamp",
+    name: "projectAtTs",
+    type: "dateTime",
+    required: true,
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["getAt"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "ts" } },
+    description: "Timestamp (ISO format)",
+  },
+  {
+    displayName: "From",
+    name: "projectDiffFrom",
+    type: "dateTime",
+    required: true,
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["getDiff"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "from" } },
+    description: "From timestamp",
+  },
+  {
+    displayName: "To",
+    name: "projectDiffTo",
+    type: "dateTime",
+    required: true,
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["getDiff"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "to" } },
+    description: "To timestamp",
   },
   // Phase fields
   {
@@ -990,6 +1240,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "description",
+        value: '={{ $parameter.description || undefined }}',
       },
     },
     description: "Project description",
@@ -1005,20 +1256,16 @@ export const startpointFields: INodeProperties[] = [
       },
     },
     options: [
-      {
-        name: "Active",
-        value: "ACTIVE",
-      },
-      {
-        name: "Inactive", 
-        value: "INACTIVE",
-      },
+      { name: "Auto (server default)", value: "auto" },
+      { name: "ACTIVE", value: "ACTIVE" },
+      { name: "INACTIVE", value: "INACTIVE" },
     ],
-    default: "ACTIVE",
+    default: "auto",
     routing: {
       send: {
         type: "body",
         property: "status",
+        value: '={{ $parameter.status === "auto" ? undefined : $parameter.status }}',
       },
     },
     description: "Project status",
@@ -1110,36 +1357,21 @@ export const startpointFields: INodeProperties[] = [
       },
     },
     options: [
-      {
-        name: "Small Renovation",
-        value: "SMALL_RENOVATION",
-      },
-      {
-        name: "Large Renovation",
-        value: "LARGE_RENOVATION",
-      },
-      {
-        name: "New Construction",
-        value: "NEW_CONSTRUCTION",
-      },
-      {
-        name: "Commercial Fit-Out",
-        value: "COMMERCIAL_FIT_OUT",
-      },
-      {
-        name: "Commercial New Build",
-        value: "COMMERCIAL_NEW_BUILD",
-      },
-      {
-        name: "Other",
-        value: "OTHER",
-      },
+      { name: "Auto (decide later)", value: "auto" },
+      { name: "Residential", value: "RESIDENTIAL" },
+      { name: "Commercial", value: "COMMERCIAL" },
+      { name: "Institutional", value: "INSTITUTIONAL" },
+      { name: "Industrial", value: "INDUSTRIAL" },
+      { name: "Mixed Use", value: "MIXED_USE" },
+      { name: "Renovation", value: "RENOVATION" },
+      { name: "New Construction", value: "NEW_CONSTRUCTION" },
     ],
-    default: "",
+    default: "auto",
     routing: {
       send: {
         type: "body",
         property: "projectType",
+        value: '={{ $parameter.projectType === "auto" ? undefined : $parameter.projectType }}',
       },
     },
     description: "Project type classification",
@@ -1155,36 +1387,19 @@ export const startpointFields: INodeProperties[] = [
       },
     },
     options: [
-      {
-        name: "Time and Materials",
-        value: "TIME_AND_MATERIALS",
-      },
-      {
-        name: "Fixed Fee",
-        value: "FIXED_FEE",
-      },
-      {
-        name: "Cost Plus Fixed Fee",
-        value: "COST_PLUS_FIXED_FEE",
-      },
-      {
-        name: "Cost Plus Percentage",
-        value: "COST_PLUS_PERCENTAGE",
-      },
-      {
-        name: "Unit Price",
-        value: "UNIT_PRICE",
-      },
-      {
-        name: "Other",
-        value: "OTHER",
-      },
+      { name: "Auto (decide later)", value: "auto" },
+      { name: "Standard", value: "STANDARD" },
+      { name: "Detailed", value: "DETAILED" },
+      { name: "Summary", value: "SUMMARY" },
+      { name: "Hourly Breakdown", value: "HOURLY_BREAKDOWN" },
+      { name: "Milestone Based", value: "MILESTONE_BASED" },
     ],
-    default: "",
+    default: "auto",
     routing: {
       send: {
         type: "body",
         property: "invoiceFormat",
+        value: '={{ $parameter.invoiceFormat === "auto" ? undefined : $parameter.invoiceFormat }}',
       },
     },
     description: "Invoice format type",
@@ -1370,12 +1585,100 @@ export const startpointFields: INodeProperties[] = [
     displayOptions: {
       show: {
         resource: ["client"],
-        operation: ["delete", "update"],
+        operation: ["delete", "update", "get", "getHistory", "getAt", "getDiff"],
       },
     },
     default: "",
     required: true,
     description: "Client UUID (required for delete/update operations)",
+  },
+  {
+    displayName: "Limit",
+    name: "clientHistoryLimit",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["getHistory"],
+      },
+    },
+    default: 50,
+    routing: { send: { type: "query", property: "limit" } },
+    description: "Number of history entries to return",
+  },
+  {
+    displayName: "Since",
+    name: "clientHistorySince",
+    type: "dateTime",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["getHistory"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "since" } },
+    description: "Show events since this timestamp",
+  },
+  {
+    displayName: "Until",
+    name: "clientHistoryUntil",
+    type: "dateTime",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["getHistory"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "until" } },
+    description: "Show events until this timestamp",
+  },
+  {
+    displayName: "Timestamp",
+    name: "clientAtTs",
+    type: "dateTime",
+    required: true,
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["getAt"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "ts" } },
+    description: "Timestamp (ISO format)",
+  },
+  {
+    displayName: "From",
+    name: "clientDiffFrom",
+    type: "dateTime",
+    required: true,
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["getDiff"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "from" } },
+    description: "From timestamp",
+  },
+  {
+    displayName: "To",
+    name: "clientDiffTo",
+    type: "dateTime",
+    required: true,
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["getDiff"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "to" } },
+    description: "To timestamp",
   },
   {
     displayName: "Client Name",
@@ -1712,6 +2015,118 @@ export const startpointFields: INodeProperties[] = [
     },
     description: "Additional notes about the client",
   },
+  {
+    displayName: "Status",
+    name: "clientStatus",
+    type: "options",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    options: [
+      { name: "Active", value: "active" },
+      { name: "Inactive", value: "inactive" },
+      { name: "Prospect", value: "prospect" },
+    ],
+    default: "active",
+    routing: { send: { type: "body", property: "status" } },
+    description: "Client status",
+  },
+
+  // Client list filters
+  {
+    displayName: "Page",
+    name: "clientPage",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["getAll"],
+      },
+    },
+    default: 1,
+    routing: { send: { type: "query", property: "page" } },
+    description: "Page number for clients pagination",
+  },
+  {
+    displayName: "Limit",
+    name: "clientLimit",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["getAll"],
+      },
+    },
+    default: 20,
+    routing: { send: { type: "query", property: "limit" } },
+    description: "Number of clients per page",
+  },
+  {
+    displayName: "Status",
+    name: "clientStatusFilter",
+    type: "options",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["getAll"],
+      },
+    },
+    options: [
+      { name: "Active", value: "active" },
+      { name: "Inactive", value: "inactive" },
+      { name: "Prospect", value: "prospect" },
+    ],
+    default: "",
+    routing: { send: { type: "query", property: "status" } },
+    description: "Filter by client status",
+  },
+  {
+    displayName: "Industry",
+    name: "clientIndustryFilter",
+    type: "options",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["getAll"],
+      },
+    },
+    options: [
+      { name: "Residential Developer", value: "RESIDENTIAL_DEVELOPER" },
+      { name: "Commercial Real Estate", value: "COMMERCIAL_REAL_ESTATE" },
+      { name: "Healthcare", value: "HEALTHCARE" },
+      { name: "Education", value: "EDUCATION" },
+      { name: "Hospitality", value: "HOSPITALITY" },
+      { name: "Retail", value: "RETAIL" },
+      { name: "Industrial Manufacturing", value: "INDUSTRIAL_MANUFACTURING" },
+      { name: "Government", value: "GOVERNMENT" },
+      { name: "Non-Profit", value: "NON_PROFIT" },
+      { name: "Technology", value: "TECHNOLOGY" },
+      { name: "Financial Services", value: "FINANCIAL_SERVICES" },
+      { name: "Other", value: "OTHER" },
+    ],
+    default: "",
+    routing: { send: { type: "query", property: "industry" } },
+    description: "Filter by industry type",
+  },
+  {
+    displayName: "Search",
+    name: "clientSearch",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["getAll"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "search" } },
+    description: "Search in client name and primary contact",
+  },
 
   // Employee Create/Update Fields
   {
@@ -1721,12 +2136,55 @@ export const startpointFields: INodeProperties[] = [
     displayOptions: {
       show: {
         resource: ["employee"],
-        operation: ["delete", "update"],
+        operation: ["delete", "update", "get", "deactivate", "getHistory"],
       },
     },
     default: "",
     required: true,
     description: "Employee UUID (required for delete/update operations)",
+  },
+  {
+    displayName: "Limit",
+    name: "employeeHistoryLimit",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getHistory"],
+      },
+    },
+    default: 50,
+    routing: { send: { type: "query", property: "limit" } },
+    description: "Number of history entries to return",
+  },
+  {
+    displayName: "Since",
+    name: "employeeHistorySince",
+    type: "dateTime",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getHistory"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "since" } },
+    description: "Show events since this timestamp",
+  },
+  {
+    displayName: "Until",
+    name: "employeeHistoryUntil",
+    type: "dateTime",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getHistory"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "until" } },
+    description: "Show events until this timestamp",
   },
   {
     displayName: "Employee Name",
@@ -1892,6 +2350,210 @@ export const startpointFields: INodeProperties[] = [
     description: "Primary discipline UUID for the employee",
   },
 
+  // Employee list filters
+  {
+    displayName: "Page",
+    name: "employeePage",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getAll"],
+      },
+    },
+    default: 1,
+    routing: { send: { type: "query", property: "page" } },
+    description: "Page number for employees",
+  },
+  {
+    displayName: "Limit",
+    name: "employeeLimit",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getAll"],
+      },
+    },
+    default: 20,
+    routing: { send: { type: "query", property: "limit" } },
+    description: "Number of employees per page",
+  },
+  {
+    displayName: "Status",
+    name: "employeeStatusFilter",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getAll"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "status" } },
+    description: "Filter by employee status",
+  },
+  {
+    displayName: "Search",
+    name: "employeeSearch",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getAll"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "search" } },
+    description: "Search in employee name and email",
+  },
+  {
+    displayName: "Primary Discipline ID",
+    name: "employeeDisciplineIdFilter",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getAll"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "disciplineId" } },
+    description: "Filter by primary discipline ID",
+  },
+  {
+    displayName: "Is Project Manager",
+    name: "isProjectManagerFilter",
+    type: "boolean",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getAll"],
+      },
+    },
+    default: false,
+    routing: { send: { type: "query", property: "isProjectManager" } },
+    description: "Filter by project manager capability",
+  },
+  {
+    displayName: "Is Principal",
+    name: "isPrincipalFilter",
+    type: "boolean",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getAll"],
+      },
+    },
+    default: false,
+    routing: { send: { type: "query", property: "isPrincipal" } },
+    description: "Filter by principal capability",
+  },
+  {
+    displayName: "Is Marketing",
+    name: "isMarketingFilter",
+    type: "boolean",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getAll"],
+      },
+    },
+    default: false,
+    routing: { send: { type: "query", property: "isMarketing" } },
+    description: "Filter by marketing capability",
+  },
+
+  // Employee capabilities endpoint filters
+  {
+    displayName: "Page",
+    name: "employeeCapabilitiesPage",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getCapabilities"],
+      },
+    },
+    default: 1,
+    routing: { send: { type: "query", property: "page" } },
+    description: "Page number",
+  },
+  {
+    displayName: "Limit",
+    name: "employeeCapabilitiesLimit",
+    type: "number",
+    typeOptions: { minValue: 1 },
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getCapabilities"],
+      },
+    },
+    default: 20,
+    routing: { send: { type: "query", property: "limit" } },
+    description: "Page size",
+  },
+  {
+    displayName: "Can Be Project Manager",
+    name: "canBeProjectManager",
+    type: "boolean",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getCapabilities"],
+      },
+    },
+    default: false,
+    routing: { send: { type: "query", property: "canBeProjectManager" } },
+    description: "Filter employees who can be project managers",
+  },
+  {
+    displayName: "Can Be Principal",
+    name: "canBePrincipal",
+    type: "boolean",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getCapabilities"],
+      },
+    },
+    default: false,
+    routing: { send: { type: "query", property: "canBePrincipal" } },
+    description: "Filter employees who can be principals",
+  },
+  {
+    displayName: "Can Be Marketing",
+    name: "canBeMarketing",
+    type: "boolean",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getCapabilities"],
+      },
+    },
+    default: false,
+    routing: { send: { type: "query", property: "canBeMarketing" } },
+    description: "Filter employees who can handle marketing",
+  },
+  {
+    displayName: "Status",
+    name: "employeeCapabilitiesStatus",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["getCapabilities"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "status" } },
+    description: "Filter by employee status",
+  },
+
   // Discipline ID field for delete/update operations
   {
     displayName: "Discipline ID",
@@ -1900,7 +2562,7 @@ export const startpointFields: INodeProperties[] = [
     displayOptions: {
       show: {
         resource: ["discipline"],
-        operation: ["delete", "update"],
+        operation: ["delete", "update", "get"],
       },
     },
     default: "",
@@ -2052,6 +2714,34 @@ export const startpointFields: INodeProperties[] = [
       },
     },
     description: "Filter by project name (case-insensitive substring match)",
+  },
+  {
+    displayName: "Project Number",
+    name: "projectNumberFilter",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["getAll"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "projectNumber" } },
+    description: "Exact match on project number (e.g., P0123)",
+  },
+  {
+    displayName: "Project Number",
+    name: "projectNumberFilter",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["getAll"],
+      },
+    },
+    default: "",
+    routing: { send: { type: "query", property: "projectNumber" } },
+    description: "Exact match on project number (e.g., P0123)",
   },
   {
     displayName: "Client Number",
