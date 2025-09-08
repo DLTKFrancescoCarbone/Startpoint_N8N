@@ -439,6 +439,49 @@ components:
           type: string
           description: User ID who last updated this task (string field, no FK constraint)
 
+    ProjectTeamMember:
+      type: object
+      required: [id, projectId, employeeId]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the team member assignment
+        projectId:
+          type: string
+          format: uuid
+          description: Project ID
+        employeeId:
+          type: string
+          format: uuid
+          description: Employee ID
+        role:
+          type: string
+          description: Role of the team member in the project
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        employee:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+            email:
+              type: string
+            primaryDiscipline:
+              type: object
+              properties:
+                name:
+                  type: string
+
     # Response Wrappers
     SuccessResponse:
       type: object
@@ -550,28 +593,130 @@ paths:
 
   /api/projects:
     get:
-      summary: Get all projects
+      summary: List all projects
+      description: |
+        Returns projects in either a simple or detailed shape.
+        - view=simple (default): minimal project fields; client {id,name}; primaryDiscipline {id,name}; no phases/tasks/team.
+        - view=detailed: includes phases[] (and tasks when requested) and team (employees[]) when included.
       tags: [Projects]
       parameters:
+        - in: query
+          name: status
+          schema:
+            type: integer
+            enum: [0, 1, 2, 3]
+          description: Filter by project status
+        - in: query
+          name: clientId
+          schema:
+            type: string
+            format: uuid
+          description: Filter by client ID
+        - in: query
+          name: projectManagerId
+          schema:
+            type: string
+            format: uuid
+          description: Filter by project manager ID
+        - in: query
+          name: projectNumber
+          schema:
+            type: string
+          description: Exact match on project number (e.g., P0123)
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Case-insensitive substring match on project name
+        - in: query
+          name: clientNumber
+          schema:
+            type: string
+          description: Exact match on client number (e.g., C1234)
+        - in: query
+          name: clientName
+          schema:
+            type: string
+          description: Case-insensitive substring match on client name
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Free-text search across project number, project name, client number, and client name
+        - in: query
+          name: view
+          schema:
+            type: string
+            enum: [simple, detailed]
+            default: simple
+          description: Controls response shape (simple excludes phases/tasks/team; detailed can include them).
         - in: query
           name: include
           schema:
             type: string
-          description: Include related data (client,primaryDiscipline,projectManager,etc.)
+          description: "Comma-separated include flags. Allowed values: phases, phases.tasks, team"
       responses:
         '200':
-          description: List of projects
+          description: Projects retrieved successfully
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Project'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+              examples:
+                simple:
+                  summary: Simple view
+                  value:
+                    status: success
+                    data:
+                      - id: "11111111-1111-1111-1111-111111111111"
+                        name: "Downtown Office"
+                        description: "Commercial office project"
+                        status: 0
+                        projectType: "COMMERCIAL"
+                        invoiceFormat: "STANDARD"
+                        totalContractAmount: 150000.0
+                        estimatedStartDate: "2025-01-15"
+                        estimatedEndDate: "2025-12-15"
+                        location: "Seattle, WA"
+                        client: { id: "40000000-0000-0000-0000-000000000001", name: "ABC Development Corp" }
+                        primaryDiscipline: { id: "20000000-0000-0000-0000-000000000001", name: "Architecture" }
+                        createdAt: "2025-01-01T10:00:00.000Z"
+                        updatedAt: "2025-01-02T10:00:00.000Z"
+                detailed:
+                  summary: Detailed view with phases, tasks, and team
+                  value:
+                    status: success
+                    data:
+                      - id: "11111111-1111-1111-1111-111111111111"
+                        name: "Downtown Office"
+                        status: 0
+                        client: { id: "40000000-0000-0000-0000-000000000001", name: "ABC Development Corp" }
+                        primaryDiscipline: { id: "20000000-0000-0000-0000-000000000001", name: "Architecture" }
+                        phases:
+                          - id: "22222222-2222-2222-2222-222222222222"
+                            name: "Schematic Design"
+                            status: 0
+                            displayOrder: 1
+                            tasks:
+                              - id: "33333333-3333-3333-3333-333333333333"
+                                name: "Site Survey"
+                                status: 0
+                                displayOrder: 1
+                        team:
+                          - id: "30000000-0000-0000-0000-000000000001"
+                            name: "John Smith"
+                            email: "john.smith@company.com"
+                            primaryDiscipline: { name: "Architecture" }
+        '500':
+          description: Server error
 
     post:
       summary: Create a new project
@@ -668,6 +813,474 @@ paths:
                         $ref: '#/components/schemas/Project'
         '404':
           $ref: '#/components/responses/NotFound'
+
+  /api/projects/{id}/phases:
+    get:
+      summary: Get project phases
+      tags: [Phases]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Project ID
+      responses:
+        '200':
+          description: Phases retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Phase'
+              example:
+                status: success
+                data:
+                  - id: "22222222-2222-2222-2222-222222222222"
+                    name: "Schematic Design"
+                    status: 0
+                    displayOrder: 1
+                    tasks:
+                      - id: "33333333-3333-3333-3333-333333333333"
+                        name: "Site Survey"
+                        status: 0
+                        estimatedHours: 40.0
+        '500':
+          description: Server error
+
+    post:
+      summary: Create phase for project
+      tags: [Phases]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Project ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: Phase name
+                description:
+                  type: string
+                  description: Phase description
+                budgetAllocationPercent:
+                  type: number
+                  format: decimal
+                  description: Budget allocation percentage
+                estimatedHours:
+                  type: number
+                  format: decimal
+                  description: Estimated hours
+                phaseBudget:
+                  type: number
+                  format: decimal
+                  description: Phase budget amount
+                displayOrder:
+                  type: integer
+                  description: Display order
+                notes:
+                  type: string
+                  description: Additional notes
+      responses:
+        '201':
+          description: Phase created successfully
+          content:
+            application/json:
+              example:
+                status: success
+                data:
+                  id: "22222222-2222-2222-2222-222222222222"
+                  name: "Schematic Design"
+                  status: 0
+        '500':
+          description: Server error
+
+  /api/projects/{projectId}/phases/{phaseId}:
+    put:
+      summary: Update a phase
+      tags: [Phases]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: phaseId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                status:
+                  type: integer
+                displayOrder:
+                  type: integer
+                budgetAllocationPercent:
+                  type: number
+                estimatedHours:
+                  type: number
+                phaseBudget:
+                  type: number
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Phase updated successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          description: Server error
+
+    delete:
+      summary: Delete a phase
+      tags: [Phases]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: phaseId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Phase deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          description: Server error
+
+  /api/projects/{projectId}/phases/{phaseId}/tasks:
+    get:
+      summary: List tasks for a phase
+      tags: [Tasks]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: phaseId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: Tasks listed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+              example:
+                status: success
+                data:
+                  - id: "33333333-3333-3333-3333-333333333333"
+                    name: "Site Survey"
+                    status: 0
+                    displayOrder: 1
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          description: Server error
+
+    post:
+      summary: Create a task
+      tags: [Tasks]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: phaseId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                status:
+                  type: integer
+                displayOrder:
+                  type: integer
+                estimatedHours:
+                  type: number
+                taskBudget:
+                  type: number
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              example:
+                status: success
+                data:
+                  id: "44444444-4444-4444-4444-444444444444"
+                  name: "Concept Options"
+                  status: 0
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          description: Server error
+
+  /api/projects/{projectId}/phases/{phaseId}/tasks/{taskId}:
+    put:
+      summary: Update a task
+      tags: [Tasks]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: phaseId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                status:
+                  type: integer
+                displayOrder:
+                  type: integer
+                estimatedHours:
+                  type: number
+                actualHours:
+                  type: number
+                taskBudget:
+                  type: number
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Task updated successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          description: Server error
+
+    delete:
+      summary: Delete a task
+      tags: [Tasks]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: phaseId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          description: Server error
+
+  /api/projects/{id}/team:
+    get:
+      summary: Get project team members
+      tags: [Projects]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Project ID
+      responses:
+        '200':
+          description: Team members retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProjectTeamMember'
+        '500':
+          description: Server error
+
+    post:
+      summary: Add team member to project
+      tags: [Projects]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Project ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - employeeId
+              properties:
+                employeeId:
+                  type: string
+                  format: uuid
+                  description: Employee ID to add to team
+                role:
+                  type: string
+                  description: Role of team member
+      responses:
+        '201':
+          description: Team member added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    $ref: '#/components/schemas/ProjectTeamMember'
+        '500':
+          description: Server error
+
+  /api/projects/{projectId}/team/{memberId}:
+    delete:
+      summary: Remove team member from project
+      tags: [Projects]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Project ID
+        - in: path
+          name: memberId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Team member ID to remove
+      responses:
+        '200':
+          description: Team member removed successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          description: Server error
 
   /api/clients:
     get:

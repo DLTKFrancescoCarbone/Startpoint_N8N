@@ -75,6 +75,11 @@ export class Startpoint implements INodeType {
             value: "task",
             description: "Manage tasks within phases",
           },
+          {
+            name: "Team",
+            value: "team",
+            description: "Manage project team members",
+          },
         ],
         default: "project",
       },

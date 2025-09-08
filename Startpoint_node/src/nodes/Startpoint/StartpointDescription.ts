@@ -955,6 +955,1000 @@ export const startpointFields: INodeProperties[] = [
     description: "Name of the project (required)",
   },
 
+  // Additional Project Create/Update Fields
+  {
+    displayName: "Project Number",
+    name: "projectNumberCreate",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "projectNumber",
+      },
+    },
+    description: "Project number (auto-generated if not provided)",
+  },
+  {
+    displayName: "Description",
+    name: "description",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "description",
+      },
+    },
+    description: "Project description",
+  },
+  {
+    displayName: "Status",
+    name: "status",
+    type: "options",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    options: [
+      {
+        name: "Active",
+        value: "ACTIVE",
+      },
+      {
+        name: "Inactive", 
+        value: "INACTIVE",
+      },
+    ],
+    default: "ACTIVE",
+    routing: {
+      send: {
+        type: "body",
+        property: "status",
+      },
+    },
+    description: "Project status",
+  },
+  {
+    displayName: "Location",
+    name: "location",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "location",
+      },
+    },
+    description: "Project location",
+  },
+  {
+    displayName: "Notes",
+    name: "notes",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "notes",
+      },
+    },
+    description: "Project notes",
+  },
+  {
+    displayName: "Client ID",
+    name: "clientIdCreate",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "clientId",
+      },
+    },
+    description: "Client UUID for assignment",
+  },
+  {
+    displayName: "Client Number",
+    name: "clientNumberCreate",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "clientNumber",
+      },
+    },
+    description: "Alternative client lookup by number (e.g., C1234)",
+  },
+  {
+    displayName: "Project Type",
+    name: "projectType",
+    type: "options",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    options: [
+      {
+        name: "Small Renovation",
+        value: "SMALL_RENOVATION",
+      },
+      {
+        name: "Large Renovation",
+        value: "LARGE_RENOVATION",
+      },
+      {
+        name: "New Construction",
+        value: "NEW_CONSTRUCTION",
+      },
+      {
+        name: "Commercial Fit-Out",
+        value: "COMMERCIAL_FIT_OUT",
+      },
+      {
+        name: "Commercial New Build",
+        value: "COMMERCIAL_NEW_BUILD",
+      },
+      {
+        name: "Other",
+        value: "OTHER",
+      },
+    ],
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "projectType",
+      },
+    },
+    description: "Project type classification",
+  },
+  {
+    displayName: "Invoice Format",
+    name: "invoiceFormat",
+    type: "options",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    options: [
+      {
+        name: "Time and Materials",
+        value: "TIME_AND_MATERIALS",
+      },
+      {
+        name: "Fixed Fee",
+        value: "FIXED_FEE",
+      },
+      {
+        name: "Cost Plus Fixed Fee",
+        value: "COST_PLUS_FIXED_FEE",
+      },
+      {
+        name: "Cost Plus Percentage",
+        value: "COST_PLUS_PERCENTAGE",
+      },
+      {
+        name: "Unit Price",
+        value: "UNIT_PRICE",
+      },
+      {
+        name: "Other",
+        value: "OTHER",
+      },
+    ],
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "invoiceFormat",
+      },
+    },
+    description: "Invoice format type",
+  },
+  {
+    displayName: "Primary Discipline ID",
+    name: "primaryDisciplineId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "primaryDisciplineId",
+      },
+    },
+    description: "Primary discipline UUID",
+  },
+  {
+    displayName: "Project Manager ID",
+    name: "projectManagerIdCreate",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "projectManagerId",
+      },
+    },
+    description: "Project manager employee UUID",
+  },
+  {
+    displayName: "Principal in Charge ID",
+    name: "principalInChargeId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "principalInChargeId",
+      },
+    },
+    description: "Principal in charge employee UUID",
+  },
+  {
+    displayName: "Marketing Contact ID",
+    name: "marketingContactId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "marketingContactId",
+      },
+    },
+    description: "Marketing contact employee UUID",
+  },
+  {
+    displayName: "Billing Manager ID",
+    name: "billingManagerId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "billingManagerId",
+      },
+    },
+    description: "Billing manager employee UUID",
+  },
+  {
+    displayName: "Total Contract Amount",
+    name: "totalContractAmount",
+    type: "number",
+    typeOptions: { minValue: 0 },
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: 0,
+    routing: {
+      send: {
+        type: "body",
+        property: "totalContractAmount",
+      },
+    },
+    description: "Total contract amount",
+  },
+  {
+    displayName: "Estimated Start Date",
+    name: "estimatedStartDate",
+    type: "dateTime",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "estimatedStartDate",
+      },
+    },
+    description: "Estimated start date (ISO format: YYYY-MM-DD)",
+  },
+  {
+    displayName: "Estimated End Date",
+    name: "estimatedEndDate",
+    type: "dateTime",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "estimatedEndDate",
+      },
+    },
+    description: "Estimated end date (ISO format: YYYY-MM-DD)",
+  },
+  {
+    displayName: "Rate Table ID",
+    name: "rateTableId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["project"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "rateTableId",
+      },
+    },
+    description: "Rate table UUID",
+  },
+
+  // Client Create/Update Fields
+  {
+    displayName: "Client ID",
+    name: "clientId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["delete", "update"],
+      },
+    },
+    default: "",
+    required: true,
+    description: "Client UUID (required for delete/update operations)",
+  },
+  {
+    displayName: "Client Name",
+    name: "clientName",
+    type: "string",
+    required: true,
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "name",
+      },
+    },
+    description: "Client company name (required)",
+  },
+  {
+    displayName: "Client Number",
+    name: "clientNumberField",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "clientNumber",
+      },
+    },
+    description: "Client number (auto-generated if not provided)",
+  },
+  {
+    displayName: "Industry",
+    name: "industry",
+    type: "options",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    options: [
+      {
+        name: "Residential Developer",
+        value: "RESIDENTIAL_DEVELOPER",
+      },
+      {
+        name: "Commercial Real Estate",
+        value: "COMMERCIAL_REAL_ESTATE",
+      },
+      {
+        name: "Healthcare",
+        value: "HEALTHCARE",
+      },
+      {
+        name: "Education",
+        value: "EDUCATION",
+      },
+      {
+        name: "Hospitality",
+        value: "HOSPITALITY",
+      },
+      {
+        name: "Retail",
+        value: "RETAIL",
+      },
+      {
+        name: "Industrial Manufacturing",
+        value: "INDUSTRIAL_MANUFACTURING",
+      },
+      {
+        name: "Government",
+        value: "GOVERNMENT",
+      },
+      {
+        name: "Non-Profit",
+        value: "NON_PROFIT",
+      },
+      {
+        name: "Technology",
+        value: "TECHNOLOGY",
+      },
+      {
+        name: "Financial Services",
+        value: "FINANCIAL_SERVICES",
+      },
+      {
+        name: "Other",
+        value: "OTHER",
+      },
+    ],
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "industry",
+      },
+    },
+    description: "Client industry classification",
+  },
+  {
+    displayName: "Company Size",
+    name: "companySize",
+    type: "options",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    options: [
+      {
+        name: "Small",
+        value: "SMALL",
+      },
+      {
+        name: "Medium",
+        value: "MEDIUM",
+      },
+      {
+        name: "Large",
+        value: "LARGE",
+      },
+      {
+        name: "Enterprise",
+        value: "ENTERPRISE",
+      },
+    ],
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "companySize",
+      },
+    },
+    description: "Company size classification",
+  },
+  {
+    displayName: "Website",
+    name: "website",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "website",
+      },
+    },
+    description: "Client website URL",
+  },
+  {
+    displayName: "Primary Contact Name",
+    name: "primaryContactName",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "primaryContactName",
+      },
+    },
+    description: "Primary contact name",
+  },
+  {
+    displayName: "Primary Contact Email",
+    name: "primaryContactEmail",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "primaryContactEmail",
+      },
+    },
+    description: "Primary contact email address",
+  },
+  {
+    displayName: "Primary Contact Phone",
+    name: "primaryContactPhone",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "primaryContactPhone",
+      },
+    },
+    description: "Primary contact phone number",
+  },
+  {
+    displayName: "Address Line 1",
+    name: "addressLine1",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "addressLine1",
+      },
+    },
+    description: "Address line 1",
+  },
+  {
+    displayName: "Address Line 2",
+    name: "addressLine2",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "addressLine2",
+      },
+    },
+    description: "Address line 2",
+  },
+  {
+    displayName: "City",
+    name: "city",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "city",
+      },
+    },
+    description: "City",
+  },
+  {
+    displayName: "State",
+    name: "state",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "state",
+      },
+    },
+    description: "State/Province",
+  },
+  {
+    displayName: "Country",
+    name: "country",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "country",
+      },
+    },
+    description: "Country",
+  },
+  {
+    displayName: "Client Notes",
+    name: "clientNotes",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["client"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "notes",
+      },
+    },
+    description: "Additional notes about the client",
+  },
+
+  // Employee Create/Update Fields
+  {
+    displayName: "Employee ID",
+    name: "employeeId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["delete", "update"],
+      },
+    },
+    default: "",
+    required: true,
+    description: "Employee UUID (required for delete/update operations)",
+  },
+  {
+    displayName: "Employee Name",
+    name: "employeeName",
+    type: "string",
+    required: true,
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "name",
+      },
+    },
+    description: "Employee full name (required)",
+  },
+  {
+    displayName: "Employee Number",
+    name: "employeeNumberField",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "employeeNumber",
+      },
+    },
+    description: "Employee number (auto-generated if not provided)",
+  },
+  {
+    displayName: "Email",
+    name: "email",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "email",
+      },
+    },
+    description: "Employee email address",
+  },
+  {
+    displayName: "Status",
+    name: "employeeStatus",
+    type: "options",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["create", "update"],
+      },
+    },
+    options: [
+      {
+        name: "Active",
+        value: "ACTIVE",
+      },
+      {
+        name: "Inactive",
+        value: "INACTIVE",
+      },
+    ],
+    default: "ACTIVE",
+    routing: {
+      send: {
+        type: "body",
+        property: "status",
+      },
+    },
+    description: "Employee status",
+  },
+  {
+    displayName: "Is Project Manager",
+    name: "isProjectManager",
+    type: "boolean",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["create", "update"],
+      },
+    },
+    default: false,
+    routing: {
+      send: {
+        type: "body",
+        property: "isProjectManager",
+      },
+    },
+    description: "Whether employee can serve as Project Manager",
+  },
+  {
+    displayName: "Is Principal",
+    name: "isPrincipal",
+    type: "boolean",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["create", "update"],
+      },
+    },
+    default: false,
+    routing: {
+      send: {
+        type: "body",
+        property: "isPrincipal",
+      },
+    },
+    description: "Whether employee can serve as Principal in Charge",
+  },
+  {
+    displayName: "Is Marketing",
+    name: "isMarketing",
+    type: "boolean",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["create", "update"],
+      },
+    },
+    default: false,
+    routing: {
+      send: {
+        type: "body",
+        property: "isMarketing",
+      },
+    },
+    description: "Whether employee can serve as Marketing Contact",
+  },
+  {
+    displayName: "Primary Discipline ID",
+    name: "employeePrimaryDisciplineId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["employee"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "primaryDisciplineId",
+      },
+    },
+    description: "Primary discipline UUID for the employee",
+  },
+
+  // Discipline ID field for delete/update operations
+  {
+    displayName: "Discipline ID",
+    name: "disciplineId",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["discipline"],
+        operation: ["delete", "update"],
+      },
+    },
+    default: "",
+    required: true,
+    description: "Discipline UUID (required for delete/update operations)",
+  },
+
+  // Discipline Create/Update Fields
+  {
+    displayName: "Discipline Name",
+    name: "disciplineName",
+    type: "string",
+    required: true,
+    displayOptions: {
+      show: {
+        resource: ["discipline"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "name",
+      },
+    },
+    description: "Discipline name (required)",
+  },
+  {
+    displayName: "Description",
+    name: "disciplineDescription",
+    type: "string",
+    displayOptions: {
+      show: {
+        resource: ["discipline"],
+        operation: ["create", "update"],
+      },
+    },
+    default: "",
+    routing: {
+      send: {
+        type: "body",
+        property: "description",
+      },
+    },
+    description: "Discipline description (optional)",
+  },
+
   // Project List Filters (for Get Many operation)
   {
     displayName: "Project Number",
