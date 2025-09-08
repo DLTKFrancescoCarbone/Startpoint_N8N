@@ -1221,6 +1221,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "projectNumber",
+        value: '={{ $parameter.projectNumberCreate || undefined }}',
       },
     },
     description: "Project number (auto-generated if not provided)",
@@ -1285,6 +1286,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "location",
+        value: '={{ $parameter.location || undefined }}',
       },
     },
     description: "Project location",
@@ -1304,6 +1306,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "notes",
+        value: '={{ $parameter.notes || undefined }}',
       },
     },
     description: "Project notes",
@@ -1323,6 +1326,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "clientId",
+        value: '={{ $parameter.clientIdCreate || undefined }}',
       },
     },
     description: "Client UUID for assignment",
@@ -1342,6 +1346,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "clientNumber",
+        value: '={{ $parameter.clientNumberCreate || undefined }}',
       },
     },
     description: "Alternative client lookup by number (e.g., C1234)",
@@ -1419,6 +1424,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "primaryDisciplineId",
+        value: '={{ $parameter.primaryDisciplineId || undefined }}',
       },
     },
     description: "Primary discipline UUID",
@@ -1438,6 +1444,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "projectManagerId",
+        value: '={{ $parameter.projectManagerIdCreate || undefined }}',
       },
     },
     description: "Project manager employee UUID",
@@ -1457,6 +1464,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "principalInChargeId",
+        value: '={{ $parameter.principalInChargeId || undefined }}',
       },
     },
     description: "Principal in charge employee UUID",
@@ -1476,6 +1484,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "marketingContactId",
+        value: '={{ $parameter.marketingContactId || undefined }}',
       },
     },
     description: "Marketing contact employee UUID",
@@ -1495,6 +1504,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "billingManagerId",
+        value: '={{ $parameter.billingManagerId || undefined }}',
       },
     },
     description: "Billing manager employee UUID",
@@ -1515,6 +1525,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "totalContractAmount",
+        value: '={{ $parameter.totalContractAmount > 0 ? $parameter.totalContractAmount : undefined }}',
       },
     },
     description: "Total contract amount",
@@ -1534,6 +1545,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "estimatedStartDate",
+        value: '={{ $parameter.estimatedStartDate || undefined }}',
       },
     },
     description: "Estimated start date (ISO format: YYYY-MM-DD)",
@@ -1553,6 +1565,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "estimatedEndDate",
+        value: '={{ $parameter.estimatedEndDate || undefined }}',
       },
     },
     description: "Estimated end date (ISO format: YYYY-MM-DD)",
@@ -1572,6 +1585,7 @@ export const startpointFields: INodeProperties[] = [
       send: {
         type: "body",
         property: "rateTableId",
+        value: '={{ $parameter.rateTableId || undefined }}',
       },
     },
     description: "Rate table UUID",
