@@ -638,10 +638,88 @@ const auditFields: INodeProperties[] = [
   }
 ];
 
+// Interactive Widgets operations (new)
+const interactiveOperation: INodeProperties = {
+  displayName: 'Operation',
+  name: 'operation',
+  type: 'options',
+  noDataExpression: true,
+  displayOptions: { show: { resource: ['interactive'] } },
+  options: [
+    { name: 'Interactive List (API)', value: 'set_interactive_list_api', action: 'Create interactive list via API', routing: { request: { method: 'POST', url: '=/api/widgets/{{$parameter.widgetId}}/list' } } },
+    { name: 'Action Button Group (API)', value: 'set_action_buttons_api', action: 'Create action button group via API', routing: { request: { method: 'POST', url: '=/api/widgets/{{$parameter.widgetId}}/actions' } } },
+    { name: 'Selection Card (API)', value: 'set_selection_card_api', action: 'Create selection card via API', routing: { request: { method: 'POST', url: '=/api/widgets/{{$parameter.widgetId}}/selection' } } },
+    { name: 'Task List (API)', value: 'set_task_list_api', action: 'Create task list via API', routing: { request: { method: 'POST', url: '=/api/widgets/{{$parameter.widgetId}}/tasks' } } },
+    { name: 'Interactive List (Publish)', value: 'set_interactive_list_publish', action: 'Create interactive list via /publish', routing: { request: { method: 'POST', url: '/publish', body: simpleShadcnBody('InteractiveList', `({ items: JSON.parse($parameter.items || '[]'), onSelect: $parameter.onSelect !== false, onAction: $parameter.onAction !== false, selected: JSON.parse($parameter.selected || '[]') })`) } } },
+    { name: 'Action Button Group (Publish)', value: 'set_action_buttons_publish', action: 'Create action button group via /publish', routing: { request: { method: 'POST', url: '/publish', body: simpleShadcnBody('ActionButtonGroup', `({ actions: JSON.parse($parameter.actions || '[]'), variant: $parameter.variant, onAction: true })`) } } },
+    { name: 'Selection Card (Publish)', value: 'set_selection_card_publish', action: 'Create selection card via /publish', routing: { request: { method: 'POST', url: '/publish', body: simpleShadcnBody('SelectionCard', `({ title: $parameter.title, description: $parameter.description, options: JSON.parse($parameter.options || '[]'), selected: JSON.parse($parameter.selected || '[]'), multiSelect: $parameter.multiSelect !== false, onSelect: true })`) } } },
+    { name: 'Task List (Publish)', value: 'set_task_list_publish', action: 'Create task list via /publish', routing: { request: { method: 'POST', url: '/publish', body: simpleShadcnBody('TaskList', `({ tasks: JSON.parse($parameter.tasks || '[]'), onTaskAction: true })`) } } },
+  ],
+  default: 'set_interactive_list_api',
+};
+
+const interactiveFields: INodeProperties[] = [
+  // Interactive List API fields
+  { displayName: 'Widget ID', name: 'widgetId', type: 'string', default: 'left', required: true, displayOptions: { show: { resource: ['interactive'], operation: ['set_interactive_list_api'] } }, description: 'Target widget ID' },
+  { displayName: 'List Items', name: 'items', type: 'json', default: [], displayOptions: { show: { resource: ['interactive'], operation: ['set_interactive_list_api'] } }, routing: { send: { type: 'body', property: 'items' } }, description: 'Array of list items with title, description, and actions' },
+  { displayName: 'Enable Selection', name: 'onSelect', type: 'boolean', default: true, displayOptions: { show: { resource: ['interactive'], operation: ['set_interactive_list_api'] } }, routing: { send: { type: 'body', property: 'onSelect' } }, description: 'Enable item selection' },
+  { displayName: 'Enable Actions', name: 'onAction', type: 'boolean', default: true, displayOptions: { show: { resource: ['interactive'], operation: ['set_interactive_list_api'] } }, routing: { send: { type: 'body', property: 'onAction' } }, description: 'Enable action buttons' },
+  { displayName: 'Pre-selected Items', name: 'selected', type: 'json', default: [], displayOptions: { show: { resource: ['interactive'], operation: ['set_interactive_list_api'] } }, routing: { send: { type: 'body', property: 'selected' } }, description: 'Array of indices for pre-selected items' },
+  { displayName: 'Agent Name', name: 'agentName', type: 'string', default: 'n8n-interactive-agent', displayOptions: { show: { resource: ['interactive'], operation: ['set_interactive_list_api'] } }, routing: { send: { type: 'body', property: 'agentName' } }, description: 'Agent name' },
+  { displayName: 'Run ID', name: 'runId', type: 'string', default: '={{$execution.id}}', displayOptions: { show: { resource: ['interactive'], operation: ['set_interactive_list_api'] } }, routing: { send: { type: 'body', property: 'runId' } }, description: 'Unique run identifier' },
+
+  // Action Button Group API fields
+  { displayName: 'Widget ID', name: 'widgetId', type: 'string', default: 'left', required: true, displayOptions: { show: { resource: ['interactive'], operation: ['set_action_buttons_api'] } }, description: 'Target widget ID' },
+  { displayName: 'Button Actions', name: 'actions', type: 'json', default: [], displayOptions: { show: { resource: ['interactive'], operation: ['set_action_buttons_api'] } }, routing: { send: { type: 'body', property: 'actions' } }, description: 'Array of button actions with type, label, and variant' },
+  { displayName: 'Button Variant', name: 'variant', type: 'options', options: [{ name: 'Default', value: 'default' }, { name: 'Outline', value: 'outline' }, { name: 'Secondary', value: 'secondary' }, { name: 'Destructive', value: 'destructive' }], default: 'default', displayOptions: { show: { resource: ['interactive'], operation: ['set_action_buttons_api'] } }, routing: { send: { type: 'body', property: 'variant' } }, description: 'Default button variant' },
+  { displayName: 'Agent Name', name: 'agentName', type: 'string', default: 'n8n-interactive-agent', displayOptions: { show: { resource: ['interactive'], operation: ['set_action_buttons_api'] } }, routing: { send: { type: 'body', property: 'agentName' } }, description: 'Agent name' },
+  { displayName: 'Run ID', name: 'runId', type: 'string', default: '={{$execution.id}}', displayOptions: { show: { resource: ['interactive'], operation: ['set_action_buttons_api'] } }, routing: { send: { type: 'body', property: 'runId' } }, description: 'Unique run identifier' },
+
+  // Selection Card API fields
+  { displayName: 'Widget ID', name: 'widgetId', type: 'string', default: 'left', required: true, displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_api'] } }, description: 'Target widget ID' },
+  { displayName: 'Card Title', name: 'title', type: 'string', default: '', displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_api'] } }, routing: { send: { type: 'body', property: 'title' } }, description: 'Selection card title' },
+  { displayName: 'Card Description', name: 'description', type: 'string', default: '', displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_api'] } }, routing: { send: { type: 'body', property: 'description' } }, description: 'Selection card description' },
+  { displayName: 'Selection Options', name: 'options', type: 'json', default: [], displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_api'] } }, routing: { send: { type: 'body', property: 'options' } }, description: 'Array of selectable options with name and description' },
+  { displayName: 'Pre-selected Options', name: 'selected', type: 'json', default: [], displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_api'] } }, routing: { send: { type: 'body', property: 'selected' } }, description: 'Array of indices for pre-selected options' },
+  { displayName: 'Multi-Select', name: 'multiSelect', type: 'boolean', default: true, displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_api'] } }, routing: { send: { type: 'body', property: 'multiSelect' } }, description: 'Allow multiple selections' },
+  { displayName: 'Agent Name', name: 'agentName', type: 'string', default: 'n8n-interactive-agent', displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_api'] } }, routing: { send: { type: 'body', property: 'agentName' } }, description: 'Agent name' },
+  { displayName: 'Run ID', name: 'runId', type: 'string', default: '={{$execution.id}}', displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_api'] } }, routing: { send: { type: 'body', property: 'runId' } }, description: 'Unique run identifier' },
+
+  // Task List API fields
+  { displayName: 'Widget ID', name: 'widgetId', type: 'string', default: 'left', required: true, displayOptions: { show: { resource: ['interactive'], operation: ['set_task_list_api'] } }, description: 'Target widget ID' },
+  { displayName: 'Task Items', name: 'tasks', type: 'json', default: [], displayOptions: { show: { resource: ['interactive'], operation: ['set_task_list_api'] } }, routing: { send: { type: 'body', property: 'tasks' } }, description: 'Array of tasks with title, description, status, and actions' },
+  { displayName: 'Agent Name', name: 'agentName', type: 'string', default: 'n8n-interactive-agent', displayOptions: { show: { resource: ['interactive'], operation: ['set_task_list_api'] } }, routing: { send: { type: 'body', property: 'agentName' } }, description: 'Agent name' },
+  { displayName: 'Run ID', name: 'runId', type: 'string', default: '={{$execution.id}}', displayOptions: { show: { resource: ['interactive'], operation: ['set_task_list_api'] } }, routing: { send: { type: 'body', property: 'runId' } }, description: 'Unique run identifier' },
+
+  // Common fields for publish operations  
+  ...commonMetaFields.map((f) => ({ ...f, displayOptions: { show: { resource: ['interactive'], operation: ['set_interactive_list_publish', 'set_action_buttons_publish', 'set_selection_card_publish', 'set_task_list_publish'] } } })),
+
+  // Interactive List Publish fields
+  { displayName: 'List Items (JSON)', name: 'items', type: 'json', default: [], displayOptions: { show: { resource: ['interactive'], operation: ['set_interactive_list_publish'] } }, description: 'Array of list items with title, description, and actions' },
+  { displayName: 'Enable Selection', name: 'onSelect', type: 'boolean', default: true, displayOptions: { show: { resource: ['interactive'], operation: ['set_interactive_list_publish'] } }, description: 'Enable item selection' },
+  { displayName: 'Enable Actions', name: 'onAction', type: 'boolean', default: true, displayOptions: { show: { resource: ['interactive'], operation: ['set_interactive_list_publish'] } }, description: 'Enable action buttons' },
+  { displayName: 'Pre-selected Items (JSON)', name: 'selected', type: 'json', default: [], displayOptions: { show: { resource: ['interactive'], operation: ['set_interactive_list_publish'] } }, description: 'Array of indices for pre-selected items' },
+
+  // Action Button Group Publish fields
+  { displayName: 'Button Actions (JSON)', name: 'actions', type: 'json', default: [], displayOptions: { show: { resource: ['interactive'], operation: ['set_action_buttons_publish'] } }, description: 'Array of button actions with type, label, and variant' },
+  { displayName: 'Button Variant', name: 'variant', type: 'options', options: [{ name: 'Default', value: 'default' }, { name: 'Outline', value: 'outline' }, { name: 'Secondary', value: 'secondary' }, { name: 'Destructive', value: 'destructive' }], default: 'default', displayOptions: { show: { resource: ['interactive'], operation: ['set_action_buttons_publish'] } }, description: 'Default button variant' },
+
+  // Selection Card Publish fields
+  { displayName: 'Card Title', name: 'title', type: 'string', default: '', displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_publish'] } }, description: 'Selection card title' },
+  { displayName: 'Card Description', name: 'description', type: 'string', default: '', displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_publish'] } }, description: 'Selection card description' },
+  { displayName: 'Selection Options (JSON)', name: 'options', type: 'json', default: [], displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_publish'] } }, description: 'Array of selectable options with name and description' },
+  { displayName: 'Pre-selected Options (JSON)', name: 'selected', type: 'json', default: [], displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_publish'] } }, description: 'Array of indices for pre-selected options' },
+  { displayName: 'Multi-Select', name: 'multiSelect', type: 'boolean', default: true, displayOptions: { show: { resource: ['interactive'], operation: ['set_selection_card_publish'] } }, description: 'Allow multiple selections' },
+
+  // Task List Publish fields  
+  { displayName: 'Task Items (JSON)', name: 'tasks', type: 'json', default: [], displayOptions: { show: { resource: ['interactive'], operation: ['set_task_list_publish'] } }, description: 'Array of tasks with title, description, status, and actions' }
+];
+
 export const uiEventsOperations: INodeProperties[] = [
   widgetStateOperation,
   rechartsOperation,
   shadcnOperation,
+  interactiveOperation,
   serverStateOperation,
   auditOperation,
 ];
@@ -652,6 +730,7 @@ export const uiEventsFields: INodeProperties[] = [
   ...rechartsFields,
   ...shadcnCommon,
   ...shadcnFields,
+  ...interactiveFields,
   ...serverStateFields,
   ...auditFields,
 ];
