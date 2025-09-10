@@ -137,6 +137,7 @@ const widgetStateOperation: INodeProperties = {
     { name: 'Update Data', value: 'update_data', action: 'Replace widget data blob', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'updateData', value: (typeof $parameter.data === 'string' ? (() => { try { return JSON.parse($parameter.data); } catch(e) { console.error('JSON Parse Error:', e, 'Data:', $parameter.data); return {}; } })() : $parameter.data) }); return e; })(${baseEventExpr})}}` } } },
     { name: 'Clear Component', value: 'clear_component', action: 'Unmount current component', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'setComponent', value: null }); return e; })(${baseEventExpr})}}` } } },
     { name: 'Set Widget State (multi)', value: 'set_widget_state', action: 'Set multiple state fields', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { const ops:any[]=[]; if ($parameter.headline) ops.push({type:'setHeadline',value:$parameter.headline}); if($parameter.severity) ops.push({type:'setSeverity',value:$parameter.severity}); if($parameter.badge?.properties&&($parameter.badge.properties.type||$parameter.badge.properties.text)) ops.push({type:'setBadge',value:$parameter.badge.properties}); if($parameter.note) ops.push({type:'setNote',value:$parameter.note}); if($parameter.cta?.properties&&$parameter.cta.properties.text) ops.push({type:'setCta',value:$parameter.cta.properties}); e.ops=ops; return e; })(${baseEventExpr})}}` } } },
+    { name: 'Set Headline (Clean)', value: 'set_headline_clean', action: 'Set widget headline with clean JSON', routing: { request: { method: 'POST', url: '/publish', body: `={{JSON.stringify({type: "WidgetUpdate", version: "1.0", widgetId: $parameter.widgetId, ops: [{type: "setHeadline", value: $parameter.headlineText}], agent: {name: $parameter.agentName || "n8n-clean", runId: $parameter.runId || $execution.id}, ts: new Date().toISOString()})}}` } } },
   ],
   default: 'set_headline',
 };
@@ -282,6 +283,12 @@ const widgetStateFields: INodeProperties[] = [
 
   // set_widget_state (multi)
   { displayName: 'Headline', name: 'headline', type: 'string', default: '', description: 'Optional', displayOptions: { show: { resource: ['widgetState'], operation: ['set_widget_state'] } } },
+  
+  // set_headline_clean fields
+  { displayName: 'Widget ID', name: 'widgetId', type: 'string', default: 'left', required: true, displayOptions: { show: { resource: ['widgetState'], operation: ['set_headline_clean'] } }, description: 'Target widget ID (left, center, right, or custom)' },
+  { displayName: 'Headline Text', name: 'headlineText', type: 'string', default: '', required: true, displayOptions: { show: { resource: ['widgetState'], operation: ['set_headline_clean'] } }, description: 'The headline text to display' },
+  { displayName: 'Agent Name', name: 'agentName', type: 'string', default: 'n8n-clean-agent', displayOptions: { show: { resource: ['widgetState'], operation: ['set_headline_clean'] } }, description: 'Name of the agent setting this headline' },
+  { displayName: 'Run ID', name: 'runId', type: 'string', default: '={{$execution.id}}', displayOptions: { show: { resource: ['widgetState'], operation: ['set_headline_clean'] } }, description: 'Unique run identifier' },
   {
     displayName: 'Severity',
     name: 'severity',
@@ -357,6 +364,8 @@ const rechartsOperation: INodeProperties = {
   options: [
     { name: 'Set LineChart', value: 'set_recharts_linechart', action: 'Mount LineChart', routing: { request: { method: 'POST', url: '/publish', body: simpleChartBody('LineChart') } } },
     { name: 'Set BarChart', value: 'set_recharts_barchart', action: 'Mount BarChart', routing: { request: { method: 'POST', url: '/publish', body: simpleChartBody('BarChart') } } },
+    { name: 'Set LineChart (Clean)', value: 'set_recharts_linechart_clean', action: 'Mount LineChart with clean JSON', routing: { request: { method: 'POST', url: '/publish', body: `={{JSON.stringify({type: "WidgetUpdate", version: "1.0", widgetId: $parameter.widgetId, ops: [{type: "setComponent", value: {lib: "recharts", type: "LineChart", data: $parameter.chartData, xKey: $parameter.xKey || "name", height: $parameter.height || 240}}], agent: {name: $parameter.agentName || "n8n-clean", runId: $parameter.runId || $execution.id}, ts: new Date().toISOString()})}}` } } },
+    { name: 'Set BarChart (Clean)', value: 'set_recharts_barchart_clean', action: 'Mount BarChart with clean JSON', routing: { request: { method: 'POST', url: '/publish', body: `={{JSON.stringify({type: "WidgetUpdate", version: "1.0", widgetId: $parameter.widgetId, ops: [{type: "setComponent", value: {lib: "recharts", type: "BarChart", data: $parameter.chartData, xKey: $parameter.xKey || "name", height: $parameter.height || 240}}], agent: {name: $parameter.agentName || "n8n-clean", runId: $parameter.runId || $execution.id}, ts: new Date().toISOString()})}}` } } },
   ],
   default: 'set_recharts_linechart',
 };
@@ -405,6 +414,61 @@ const rechartsCommonFields: INodeProperties[] = [
 
 
 const rechartsFields: INodeProperties[] = [];
+
+// Clean fields for the new clean operations (no complex routing, direct JSON handling)
+const rechartsCleanFields: INodeProperties[] = [
+  // Clean chart data field - native JSON type, no string parsing
+  {
+    displayName: 'Chart Data',
+    name: 'chartData', 
+    type: 'json',
+    default: '[]',
+    required: true,
+    displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart_clean', 'set_recharts_barchart_clean'] } },
+    description: 'Array of data objects for the chart. Example: [{"name": "Project A", "value": 1000}]'
+  },
+  {
+    displayName: 'Widget ID',
+    name: 'widgetId',
+    type: 'string',
+    default: 'left',
+    required: true,
+    displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart_clean', 'set_recharts_barchart_clean'] } },
+    description: 'Target widget ID (left, center, right, or custom ID)'
+  },
+  {
+    displayName: 'X Key',
+    name: 'xKey',
+    type: 'string', 
+    default: 'name',
+    displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart_clean', 'set_recharts_barchart_clean'] } },
+    description: 'Property name for X-axis values'
+  },
+  {
+    displayName: 'Chart Height',
+    name: 'height',
+    type: 'number',
+    default: 240,
+    displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart_clean', 'set_recharts_barchart_clean'] } },
+    description: 'Chart height in pixels'
+  },
+  {
+    displayName: 'Agent Name',
+    name: 'agentName',
+    type: 'string',
+    default: 'n8n-clean-agent',
+    displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart_clean', 'set_recharts_barchart_clean'] } },
+    description: 'Name of the agent creating this chart'
+  },
+  {
+    displayName: 'Run ID',
+    name: 'runId',
+    type: 'string',
+    default: '={{$execution.id}}',
+    displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart_clean', 'set_recharts_barchart_clean'] } },
+    description: 'Unique run identifier'
+  }
+];
 
 // Shadcn components
 const shadcnOperation: INodeProperties = {
@@ -507,6 +571,7 @@ export const uiEventsFields: INodeProperties[] = [
   ...widgetStateFields,
   ...rechartsCommonFields,
   ...rechartsFields,
+  ...rechartsCleanFields,
   ...shadcnCommon,
   ...shadcnFields,
 ];
