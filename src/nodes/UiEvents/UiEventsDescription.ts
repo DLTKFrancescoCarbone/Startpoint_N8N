@@ -138,6 +138,7 @@ const widgetStateOperation: INodeProperties = {
     { name: 'Clear Component', value: 'clear_component', action: 'Unmount current component', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'setComponent', value: null }); return e; })(${baseEventExpr})}}` } } },
     { name: 'Set Widget State (multi)', value: 'set_widget_state', action: 'Set multiple state fields', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { const ops:any[]=[]; if ($parameter.headline) ops.push({type:'setHeadline',value:$parameter.headline}); if($parameter.severity) ops.push({type:'setSeverity',value:$parameter.severity}); if($parameter.badge?.properties&&($parameter.badge.properties.type||$parameter.badge.properties.text)) ops.push({type:'setBadge',value:$parameter.badge.properties}); if($parameter.note) ops.push({type:'setNote',value:$parameter.note}); if($parameter.cta?.properties&&$parameter.cta.properties.text) ops.push({type:'setCta',value:$parameter.cta.properties}); e.ops=ops; return e; })(${baseEventExpr})}}` } } },
     { name: 'Set Headline (Clean)', value: 'set_headline_clean', action: 'Set widget headline with clean JSON', routing: { request: { method: 'POST', url: '/publish', body: `={{JSON.stringify({type: "WidgetUpdate", version: "1.0", widgetId: ($parameter.widgetId || "").toString().trim(), ops: [{type: "setHeadline", value: ($parameter.headlineText || "").toString().trim()}], agent: {name: ($parameter.agentName || "n8n-clean").toString().trim(), runId: $parameter.runId || $execution.id}, ts: new Date().toISOString()})}}` } } },
+    { name: 'Set Headline (API)', value: 'set_headline_api', action: 'Set widget headline via dedicated API', routing: { request: { method: 'POST', url: '=/api/widgets/{{$parameter.widgetId}}/headline' } } },
   ],
   default: 'set_headline',
 };
@@ -289,6 +290,12 @@ const widgetStateFields: INodeProperties[] = [
   { displayName: 'Headline Text', name: 'headlineText', type: 'string', default: '', required: true, displayOptions: { show: { resource: ['widgetState'], operation: ['set_headline_clean'] } }, description: 'The headline text to display' },
   { displayName: 'Agent Name', name: 'agentName', type: 'string', default: 'n8n-clean-agent', displayOptions: { show: { resource: ['widgetState'], operation: ['set_headline_clean'] } }, description: 'Name of the agent setting this headline' },
   { displayName: 'Run ID', name: 'runId', type: 'string', default: '={{$execution.id}}', displayOptions: { show: { resource: ['widgetState'], operation: ['set_headline_clean'] } }, description: 'Unique run identifier' },
+  
+  // set_headline_api fields - simple routing like Startpoint
+  { displayName: 'Widget ID', name: 'widgetId', type: 'string', default: 'left', required: true, displayOptions: { show: { resource: ['widgetState'], operation: ['set_headline_api'] } }, description: 'Target widget ID (left, center, right, or custom)' },
+  { displayName: 'Headline Text', name: 'text', type: 'string', default: '', required: true, displayOptions: { show: { resource: ['widgetState'], operation: ['set_headline_api'] } }, routing: { send: { type: 'body', property: 'text' } }, description: 'The headline text to display' },
+  { displayName: 'Agent Name', name: 'agentName', type: 'string', default: 'n8n-api-agent', displayOptions: { show: { resource: ['widgetState'], operation: ['set_headline_api'] } }, routing: { send: { type: 'body', property: 'agentName' } }, description: 'Name of the agent setting this headline' },
+  { displayName: 'Run ID', name: 'runId', type: 'string', default: '={{$execution.id}}', displayOptions: { show: { resource: ['widgetState'], operation: ['set_headline_api'] } }, routing: { send: { type: 'body', property: 'runId' } }, description: 'Unique run identifier' },
   {
     displayName: 'Severity',
     name: 'severity',
@@ -366,6 +373,8 @@ const rechartsOperation: INodeProperties = {
     { name: 'Set BarChart', value: 'set_recharts_barchart', action: 'Mount BarChart', routing: { request: { method: 'POST', url: '/publish', body: simpleChartBody('BarChart') } } },
     { name: 'Set LineChart (Clean)', value: 'set_recharts_linechart_clean', action: 'Mount LineChart with clean JSON', routing: { request: { method: 'POST', url: '/publish', body: `={{JSON.stringify({type: "WidgetUpdate", version: "1.0", widgetId: ($parameter.widgetId || "").toString().trim(), ops: [{type: "setComponent", value: {lib: "recharts", type: "LineChart", data: ($parameter.chartData?.data || $parameter.chartData || []), xKey: ($parameter.xKey || "name").toString().trim(), height: $parameter.height || 240}}], agent: {name: ($parameter.agentName || "n8n-clean").toString().trim(), runId: $parameter.runId || $execution.id}, ts: new Date().toISOString()})}}` } } },
     { name: 'Set BarChart (Clean)', value: 'set_recharts_barchart_clean', action: 'Mount BarChart with clean JSON', routing: { request: { method: 'POST', url: '/publish', body: `={{JSON.stringify({type: "WidgetUpdate", version: "1.0", widgetId: ($parameter.widgetId || "").toString().trim(), ops: [{type: "setComponent", value: {lib: "recharts", type: "BarChart", data: ($parameter.chartData?.data || $parameter.chartData || []), xKey: ($parameter.xKey || "name").toString().trim(), height: $parameter.height || 240}}], agent: {name: ($parameter.agentName || "n8n-clean").toString().trim(), runId: $parameter.runId || $execution.id}, ts: new Date().toISOString()})}}` } } },
+    { name: 'Set BarChart (API)', value: 'set_barchart_api', action: 'Create bar chart via dedicated API', routing: { request: { method: 'POST', url: '=/api/widgets/{{$parameter.widgetId}}/chart/bar' } } },
+    { name: 'Set LineChart (API)', value: 'set_linechart_api', action: 'Create line chart via dedicated API', routing: { request: { method: 'POST', url: '=/api/widgets/{{$parameter.widgetId}}/chart/line' } } },
   ],
   default: 'set_recharts_linechart',
 };
@@ -467,6 +476,63 @@ const rechartsCleanFields: INodeProperties[] = [
     default: '={{$execution.id}}',
     displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart_clean', 'set_recharts_barchart_clean'] } },
     description: 'Unique run identifier'
+  },
+  
+  // API-based chart fields - simple form routing like Startpoint
+  {
+    displayName: 'Widget ID',
+    name: 'widgetId',
+    type: 'string',
+    default: 'left',
+    required: true,
+    displayOptions: { show: { resource: ['recharts'], operation: ['set_barchart_api', 'set_linechart_api'] } },
+    description: 'Target widget ID (left, center, right, or custom ID)'
+  },
+  {
+    displayName: 'Chart Data',
+    name: 'data',
+    type: 'json',
+    default: [],
+    required: true,
+    displayOptions: { show: { resource: ['recharts'], operation: ['set_barchart_api', 'set_linechart_api'] } },
+    routing: { send: { type: 'body', property: 'data' } },
+    description: 'Array of data objects. Example: [{"name": "Project A", "value": 1000}]'
+  },
+  {
+    displayName: 'X Key',
+    name: 'xKey',
+    type: 'string',
+    default: 'name',
+    displayOptions: { show: { resource: ['recharts'], operation: ['set_barchart_api', 'set_linechart_api'] } },
+    routing: { send: { type: 'body', property: 'xKey' } },
+    description: 'Property name for X-axis values'
+  },
+  {
+    displayName: 'Chart Height',
+    name: 'height',
+    type: 'number',
+    default: 240,
+    displayOptions: { show: { resource: ['recharts'], operation: ['set_barchart_api', 'set_linechart_api'] } },
+    routing: { send: { type: 'body', property: 'height' } },
+    description: 'Chart height in pixels'
+  },
+  {
+    displayName: 'Agent Name',
+    name: 'agentName',
+    type: 'string',
+    default: 'n8n-api-agent',
+    displayOptions: { show: { resource: ['recharts'], operation: ['set_barchart_api', 'set_linechart_api'] } },
+    routing: { send: { type: 'body', property: 'agentName' } },
+    description: 'Name of the agent creating this chart'
+  },
+  {
+    displayName: 'Run ID',
+    name: 'runId',
+    type: 'string',
+    default: '={{$execution.id}}',
+    displayOptions: { show: { resource: ['recharts'], operation: ['set_barchart_api', 'set_linechart_api'] } },
+    routing: { send: { type: 'body', property: 'runId' } },
+    description: 'Unique run identifier'
   }
 ];
 
@@ -487,6 +553,8 @@ const shadcnOperation: INodeProperties = {
     { name: 'Set Button', value: 'set_shadcn_button', action: 'Mount Button', routing: { request: { method: 'POST', url: '/publish', body: shadcnBody('Button', `({ variant: $parameter.variant, size: $parameter.size, text: $parameter.text, className: $parameter.className, onClick: $parameter.onClick })`) } } },
     { name: 'Set Table', value: 'set_shadcn_table', action: 'Mount Table', routing: { request: { method: 'POST', url: '/publish', body: shadcnBody('Table', `({ headers: $parameter.headers, rows: $parameter.rows, className: $parameter.className })`) } } },
     { name: 'Set Card', value: 'set_shadcn_card', action: 'Mount Card', routing: { request: { method: 'POST', url: '/publish', body: shadcnBody('Card', `({ title: $parameter.title, description: $parameter.description, content: ($parameter.content ? (function(c){ try { return JSON.parse(c) } catch(_) { return c } })($parameter.content) : undefined), footer: $parameter.footer, className: $parameter.className })`) } } },
+    { name: 'Set Alert (API)', value: 'set_alert_api', action: 'Create alert via dedicated API', routing: { request: { method: 'POST', url: '=/api/widgets/{{$parameter.widgetId}}/alert' } } },
+    { name: 'Set Table (API)', value: 'set_table_api', action: 'Create table via dedicated API', routing: { request: { method: 'POST', url: '=/api/widgets/{{$parameter.widgetId}}/table' } } },
   ],
   default: 'set_shadcn_statscard',
 };
@@ -559,6 +627,19 @@ const shadcnFields: INodeProperties[] = [
   { displayName: 'Footer', name: 'footer', type: 'string', default: '', displayOptions: { show: { resource: ['shadcn'], operation: ['set_shadcn_card'] } } },
   { displayName: 'Class Name', name: 'className', type: 'string', default: '', displayOptions: { show: { resource: ['shadcn'], operation: ['set_shadcn_card'] } } },
   
+  // API-based Shadcn component fields - simple routing like Startpoint
+  // Alert API fields
+  { displayName: 'Widget ID', name: 'widgetId', type: 'string', default: 'left', required: true, displayOptions: { show: { resource: ['shadcn'], operation: ['set_alert_api'] } }, description: 'Target widget ID' },
+  { displayName: 'Alert Title', name: 'title', type: 'string', default: '', displayOptions: { show: { resource: ['shadcn'], operation: ['set_alert_api'] } }, routing: { send: { type: 'body', property: 'title' } }, description: 'Alert title text' },
+  { displayName: 'Alert Description', name: 'description', type: 'string', default: '', displayOptions: { show: { resource: ['shadcn'], operation: ['set_alert_api'] } }, routing: { send: { type: 'body', property: 'description' } }, description: 'Alert description text' },
+  { displayName: 'Alert Variant', name: 'variant', type: 'options', options: [{ name: 'Default', value: 'default' }, { name: 'Destructive', value: 'destructive' }], default: 'default', displayOptions: { show: { resource: ['shadcn'], operation: ['set_alert_api'] } }, routing: { send: { type: 'body', property: 'variant' } }, description: 'Alert style variant' },
+  { displayName: 'Agent Name', name: 'agentName', type: 'string', default: 'n8n-api-agent', displayOptions: { show: { resource: ['shadcn'], operation: ['set_alert_api'] } }, routing: { send: { type: 'body', property: 'agentName' } }, description: 'Agent name' },
+  
+  // Table API fields  
+  { displayName: 'Widget ID', name: 'widgetId', type: 'string', default: 'left', required: true, displayOptions: { show: { resource: ['shadcn'], operation: ['set_table_api'] } }, description: 'Target widget ID' },
+  { displayName: 'Table Headers', name: 'headers', type: 'json', default: [], displayOptions: { show: { resource: ['shadcn'], operation: ['set_table_api'] } }, routing: { send: { type: 'body', property: 'headers' } }, description: 'Array of column header names' },
+  { displayName: 'Table Rows', name: 'rows', type: 'json', default: [], displayOptions: { show: { resource: ['shadcn'], operation: ['set_table_api'] } }, routing: { send: { type: 'body', property: 'rows' } }, description: 'Array of row data arrays' },
+  { displayName: 'Agent Name', name: 'agentName', type: 'string', default: 'n8n-api-agent', displayOptions: { show: { resource: ['shadcn'], operation: ['set_table_api'] } }, routing: { send: { type: 'body', property: 'agentName' } }, description: 'Agent name' }
 ];
 
 export const uiEventsOperations: INodeProperties[] = [
