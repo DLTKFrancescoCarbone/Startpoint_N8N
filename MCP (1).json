@@ -1,0 +1,862 @@
+{
+  "name": "MCP",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "1c073522-100f-46ba-8dc3-5615f18348c3"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        0
+      ],
+      "id": "d57e8f46-7da2-4dbe-af99-fafc977bdd80",
+      "name": "MCP Server Trigger",
+      "webhookId": "1c073522-100f-46ba-8dc3-5615f18348c3"
+    },
+    {
+      "parameters": {
+        "projectNumber": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_Number', ``, 'string') }}",
+        "nameFilter": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_Name_Filter', ``, 'string') }}",
+        "clientNumber": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_Number', ``, 'string') }}",
+        "clientName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_Name', ``, 'string') }}",
+        "search": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search', ``, 'string') }}",
+        "clientId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_ID', ``, 'string') }}",
+        "projectManagerId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_Manager_ID', ``, 'string') }}",
+        "view": "detailed",
+        "include": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Include', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        560,
+        400
+      ],
+      "id": "7bf6c790-71cc-486a-af4f-d64bf18e5912",
+      "name": "Get many projects in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "projectName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_Name', ``, 'string') }}",
+        "projectNumberCreate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_Number', ``, 'string') }}",
+        "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location', ``, 'string') }}",
+        "notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', ``, 'string') }}",
+        "clientIdCreate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_ID', ``, 'string') }}",
+        "clientNumberCreate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_Number', ``, 'string') }}",
+        "primaryDisciplineId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Primary_Discipline_ID', ``, 'string') }}",
+        "projectManagerIdCreate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_Manager_ID', ``, 'string') }}",
+        "principalInChargeId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Principal_in_Charge_ID', ``, 'string') }}",
+        "marketingContactId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Marketing_Contact_ID', ``, 'string') }}",
+        "billingManagerId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Billing_Manager_ID', ``, 'string') }}",
+        "totalContractAmount": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Total_Contract_Amount', ``, 'number') }}",
+        "estimatedStartDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estimated_Start_Date', ``, 'string') }}",
+        "estimatedEndDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estimated_End_Date', ``, 'string') }}",
+        "rateTableId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Rate_Table_ID', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        192,
+        368
+      ],
+      "id": "e82a4ec5-5dd2-4ef4-aac4-c1b3d3ce42f3",
+      "name": "Create a project in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "projectId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_ID', ``, 'string') }}",
+        "projectName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_Name', ``, 'string') }}",
+        "projectNumberCreate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_Number', ``, 'string') }}",
+        "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location', ``, 'string') }}",
+        "notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', ``, 'string') }}",
+        "clientIdCreate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_ID', ``, 'string') }}",
+        "clientNumberCreate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_Number', ``, 'string') }}",
+        "primaryDisciplineId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Primary_Discipline_ID', ``, 'string') }}",
+        "projectManagerIdCreate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_Manager_ID', ``, 'string') }}",
+        "principalInChargeId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Principal_in_Charge_ID', ``, 'string') }}",
+        "marketingContactId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Marketing_Contact_ID', ``, 'string') }}",
+        "billingManagerId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Billing_Manager_ID', ``, 'string') }}",
+        "totalContractAmount": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Total_Contract_Amount', ``, 'number') }}",
+        "estimatedStartDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estimated_Start_Date', ``, 'string') }}",
+        "estimatedEndDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estimated_End_Date', ``, 'string') }}",
+        "rateTableId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Rate_Table_ID', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        288,
+        448
+      ],
+      "id": "71e663d3-a86c-4fb4-b19f-f607ccee8f61",
+      "name": "Update a project in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getHistory",
+        "projectId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_ID', ``, 'string') }}",
+        "projectHistorySince": "=",
+        "projectHistoryUntil": "=",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        384,
+        496
+      ],
+      "id": "0be91756-6c97-452f-9f17-a33a2d7c3a5e",
+      "name": "Get project history in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "client",
+        "clientPage": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Page', ``, 'number') }}",
+        "clientLimit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "clientSearch": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        16,
+        640
+      ],
+      "id": "8d80dd90-3547-48c0-8a48-6998673da054",
+      "name": "Get many clients in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "client",
+        "operation": "create",
+        "clientName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_Name', ``, 'string') }}",
+        "clientNumberField": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_Number', ``, 'string') }}",
+        "website": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Website', ``, 'string') }}",
+        "primaryContactName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Primary_Contact_Name', ``, 'string') }}",
+        "primaryContactEmail": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Primary_Contact_Email', ``, 'string') }}",
+        "primaryContactPhone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Primary_Contact_Phone', ``, 'string') }}",
+        "addressLine1": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Address_Line_1', ``, 'string') }}",
+        "addressLine2": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Address_Line_2', ``, 'string') }}",
+        "city": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('City', ``, 'string') }}",
+        "state": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('State', ``, 'string') }}",
+        "country": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Country', ``, 'string') }}",
+        "clientNotes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_Notes', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        608
+      ],
+      "id": "a2fcf7fb-5340-4996-af1d-fc7a8b0c0144",
+      "name": "Create a client in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "client",
+        "operation": "update",
+        "clientId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_ID', ``, 'string') }}",
+        "clientName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_Name', ``, 'string') }}",
+        "clientNumberField": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_Number', ``, 'string') }}",
+        "website": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Website', ``, 'string') }}",
+        "primaryContactName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Primary_Contact_Name', ``, 'string') }}",
+        "primaryContactEmail": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Primary_Contact_Email', ``, 'string') }}",
+        "primaryContactPhone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Primary_Contact_Phone', ``, 'string') }}",
+        "addressLine1": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Address_Line_1', ``, 'string') }}",
+        "addressLine2": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Address_Line_2', ``, 'string') }}",
+        "city": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('City', ``, 'string') }}",
+        "state": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('State', ``, 'string') }}",
+        "country": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Country', ``, 'string') }}",
+        "clientNotes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_Notes', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        80,
+        592
+      ],
+      "id": "bdb4cf8c-c0d4-4e54-9e89-ae01bc9c1705",
+      "name": "Update a client in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "client",
+        "operation": "getHistory",
+        "clientId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Client_ID', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        144,
+        656
+      ],
+      "id": "8a83b160-b858-4110-8c06-9cb9be771188",
+      "name": "Get client history in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "employee",
+        "employeePage": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Page', ``, 'number') }}",
+        "employeeLimit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "employeeStatusFilter": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status', ``, 'string') }}",
+        "employeeSearch": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search', ``, 'string') }}",
+        "employeeDisciplineIdFilter": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Primary_Discipline_ID', ``, 'string') }}",
+        "isProjectManagerFilter": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Is_Project_Manager', ``, 'boolean') }}",
+        "isPrincipalFilter": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Is_Principal', ``, 'boolean') }}",
+        "isMarketingFilter": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Is_Marketing', ``, 'boolean') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        528
+      ],
+      "id": "20650e08-0cfe-4042-be01-774aeda5d89c",
+      "name": "Get many employees in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "employee",
+        "operation": "create",
+        "employeeName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Employee_Name', ``, 'string') }}",
+        "employeeNumberField": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Employee_Number', ``, 'string') }}",
+        "email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', ``, 'string') }}",
+        "isProjectManager": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Is_Project_Manager', ``, 'boolean') }}",
+        "isPrincipal": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Is_Principal', ``, 'boolean') }}",
+        "isMarketing": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Is_Marketing', ``, 'boolean') }}",
+        "employeePrimaryDisciplineId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Primary_Discipline_ID', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        528
+      ],
+      "id": "c58350f7-73ad-44da-843c-0f9d9d92da92",
+      "name": "Create an employee in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "employee",
+        "operation": "update",
+        "employeeId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Employee_ID', ``, 'string') }}",
+        "employeeName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Employee_Name', ``, 'string') }}",
+        "employeeNumberField": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Employee_Number', ``, 'string') }}",
+        "email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', ``, 'string') }}",
+        "isProjectManager": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Is_Project_Manager', ``, 'boolean') }}",
+        "isPrincipal": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Is_Principal', ``, 'boolean') }}",
+        "isMarketing": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Is_Marketing', ``, 'boolean') }}",
+        "employeePrimaryDisciplineId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Primary_Discipline_ID', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        400
+      ],
+      "id": "198a9ae1-bd7f-4f61-8ccc-550d413535f4",
+      "name": "Update an employee in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "employee",
+        "operation": "getHistory",
+        "employeeId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Employee_ID', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        336
+      ],
+      "id": "c8227c6d-d0c6-44b1-931f-21d8b28dcc57",
+      "name": "Get employee history in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "discipline",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        -128,
+        480
+      ],
+      "id": "5b9a32a7-e3e3-43c5-bc13-6fb4ecbd0da7",
+      "name": "Get many disciplines in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "phase",
+        "projectId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_ID', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        1024
+      ],
+      "id": "95e0a78d-e0bb-4be2-b74a-2aa7d87b87b2",
+      "name": "Get many phases in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "phase",
+        "operation": "create",
+        "projectId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_ID', ``, 'string') }}",
+        "displayOrder": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Display_Order', ``, 'number') }}",
+        "budgetAllocationPercent": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Budget_Allocation__', ``, 'number') }}",
+        "estimatedHours": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estimated_Hours', ``, 'number') }}",
+        "phaseBudget": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Phase_Budget', ``, 'number') }}",
+        "notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        1024
+      ],
+      "id": "9d861623-59b5-4373-ab4b-8e92efe7bbfd",
+      "name": "Create a phase in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "phase",
+        "operation": "update",
+        "phaseId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Phase_ID', ``, 'string') }}",
+        "projectId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_ID', ``, 'string') }}",
+        "status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status_Code', ``, 'number') }}",
+        "displayOrder": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Display_Order', ``, 'number') }}",
+        "budgetAllocationPercent": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Budget_Allocation__', ``, 'number') }}",
+        "estimatedHours": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estimated_Hours', ``, 'number') }}",
+        "phaseBudget": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Phase_Budget', ``, 'number') }}",
+        "notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        1040
+      ],
+      "id": "7ecf0d9a-e520-4c07-a6db-2299eb8d4dc2",
+      "name": "Update a phase in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "task",
+        "projectId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_ID', ``, 'string') }}",
+        "phaseId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Phase_ID', ``, 'string') }}",
+        "search": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        800
+      ],
+      "id": "9ba98a98-2371-4a83-9bf2-94e7db458cba",
+      "name": "Get many tasks in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "task",
+        "operation": "create",
+        "projectId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_ID', ``, 'string') }}",
+        "phaseId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Phase_ID', ``, 'string') }}",
+        "status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status_Code', ``, 'number') }}",
+        "displayOrder": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Display_Order', ``, 'number') }}",
+        "estimatedHours": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estimated_Hours', ``, 'number') }}",
+        "taskBudget": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Task_Budget', ``, 'number') }}",
+        "notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        800
+      ],
+      "id": "855557e9-3def-4ce2-a286-84d0cf87e6eb",
+      "name": "Create a task in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "task",
+        "operation": "update",
+        "taskId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Task_ID', ``, 'string') }}",
+        "projectId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_ID', ``, 'string') }}",
+        "phaseId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Phase_ID', ``, 'string') }}",
+        "status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status_Code', ``, 'number') }}",
+        "displayOrder": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Display_Order', ``, 'number') }}",
+        "estimatedHours": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estimated_Hours', ``, 'number') }}",
+        "actualHours": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Actual_Hours', ``, 'number') }}",
+        "taskBudget": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Task_Budget', ``, 'number') }}",
+        "notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        912
+      ],
+      "id": "2f0e715a-1e53-49b3-95f2-b3c3b30f65c2",
+      "name": "Update a task in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "team",
+        "projectId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_ID', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        320,
+        1104
+      ],
+      "id": "5261a4a6-b49f-4eb9-8694-211d2b85bcd6",
+      "name": "Get team members in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "team",
+        "operation": "create",
+        "projectId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_ID', ``, 'string') }}",
+        "employeeId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Employee_ID', ``, 'string') }}",
+        "role": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Role', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        256,
+        1088
+      ],
+      "id": "2d88eb85-0b08-4140-9f1b-ff82f656b492",
+      "name": "Add team member in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "team",
+        "operation": "delete",
+        "projectId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project_ID', ``, 'string') }}",
+        "memberId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Member_ID', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "CUSTOM.startpointTool",
+      "typeVersion": 1,
+      "position": [
+        176,
+        1072
+      ],
+      "id": "f6e27c27-cebd-442d-bf4a-4f1b32174480",
+      "name": "Remove team member in Startpoint",
+      "credentials": {
+        "startpointApi": {
+          "id": "wStjVTkKLvbhV7EO",
+          "name": "Startpoint account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get many projects in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a project in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a project in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get project history in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many clients in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a client in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a client in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get client history in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many employees in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an employee in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update an employee in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get employee history in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many disciplines in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many phases in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a phase in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a phase in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many tasks in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a task in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a task in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get team members in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add team member in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove team member in Startpoint": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f83f3b5c-4469-4fc3-a15e-4c8719bd6a9b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a39ac35bde92a7275cb30ea50582da2ebc853c1e130e7bd5ddfadc31d0dc303f"
+  },
+  "id": "NcplMB0o9FAr5iuB",
+  "tags": []
+}

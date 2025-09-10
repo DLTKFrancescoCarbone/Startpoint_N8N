@@ -5,21 +5,22 @@ FROM n8nio/n8n:latest
 USER root
 
 # Set the working directory for the custom node installation
+WORKDIR /home/node/.n8n/custom
+
+# --- Startpoint node ---
 WORKDIR /home/node/.n8n/custom/Startpoint_node
-
-# Copy package files first to leverage Docker build cache
-COPY Startpoint_node/package*.json ./
-
-# Install all dependencies (including devDependencies for building)
+COPY Stratpoint_N8N/Startpoint_node/package*.json ./
 RUN npm install --include=dev --silent
-
-# Copy source files for building
-COPY Startpoint_node/. .
-
-# Build the project (compile TypeScript)
+COPY Stratpoint_N8N/Startpoint_node/. .
 RUN npm run build
+RUN npm prune --omit=dev --silent
 
-# Remove dev dependencies for a leaner runtime image
+# --- UI Spike node ---
+WORKDIR /home/node/.n8n/custom/ui-spike-n8n
+COPY ui-spike-n8n/package*.json ./
+RUN npm install --include=dev --silent
+COPY ui-spike-n8n/. .
+RUN npm run build
 RUN npm prune --omit=dev --silent
 
 # Set proper ownership of the custom node files
@@ -31,5 +32,4 @@ USER node
 # Set the working directory back to n8n default
 WORKDIR /home/node
 
-# The n8n container will automatically discover and load the custom node
-# from /home/node/.n8n/custom when it starts
+# n8n will auto-discover and load both custom nodes from /home/node/.n8n/custom

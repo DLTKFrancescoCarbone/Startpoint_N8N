@@ -1,0 +1,96 @@
+Phase 2: Meta & History
+
+Scope: Client meta, history endpoints for Clients, Employees, Projects
+Endpoints:
+Clients meta: GET /api/clients/meta/industries, GET /api/clients/meta/company-sizes
+Client history: GET /api/clients/{id}/history, GET /api/clients/{id}/at, GET /api/clients/{id}/diff
+Employee history: GET /api/employees/{id}/history
+Project history: GET /api/projects/{id}/history, GET /api/projects/{id}/at, GET /api/projects/{id}/diff
+Changes:
+Add new operations under existing resources, with clear naming and required fields (id path, plus query params limit, since, until, ts, from, to where applicable).
+Ensure responses are not unwrapped; expose status, data, metadata for lists.
+File: Startpoint_node/src/nodes/Startpoint/StartpointDescription.ts (extend Clients, Employees, Projects operations lists).
+Acceptance:
+All meta/history endpoints callable with correct parameters, return success on mock/manual runs.
+Phase 3: Rate Tables
+
+Scope: Rate Tables resource
+Endpoints:
+GET /api/rate-tables (list), GET /api/rate-tables/{id}, GET /api/rate-tables/active
+Changes:
+Add new Resource option rateTable.
+Implement operations: Get Many (w/ possible filters: status, effectiveDate if present), Get by ID, Get Active.
+File: Startpoint_node/src/nodes/Startpoint/StartpointDescription.ts (add resource option and operations); icon optional.
+Acceptance:
+Rate table operations visible and functional.
+Responses include envelope and schema properties.
+Phase 4: Timesheets & Entries
+
+Scope: Full timesheets domain
+Endpoints:
+Timesheets: GET /api/timesheets, POST /api/timesheets, GET /api/timesheets/{id}, PUT /api/timesheets/{id}
+Actions: POST /api/timesheets/{id}/submit, POST /api/timesheets/{id}/approve, POST /api/timesheets/{id}/reject
+Entries: GET/POST /api/timesheets/{id}/entries, PUT/DELETE /api/timesheets/{timesheetId}/entries/{entryId}
+History: GET /api/timesheets/{id}/history, GET /api/timesheets/{id}/at, GET /api/timesheets/{id}/diff
+Changes:
+Add new Resource timesheet with sub-operations:
+Core CRUD (create/update include fields per schema: employeeId, periodStart, periodEnd, status, notes).
+Actions: submit/approve/reject require id path only.
+Nested entries: handle path params timesheetId, entryId; entry fields per schema (entryDate, durationHours, description, plus project/phase/task targeting if present).
+History ops similar to Clients/Projects.
+File: Startpoint_node/src/nodes/Startpoint/StartpointDescription.ts (resource + ops + fields).
+Acceptance:
+All CRUD, actions, and entries routes function with correct path/query/body mapping.
+History endpoints return envelopes with arrays/objects per spec.
+Phase 5: Credentials & Request Defaults
+
+Scope: Credentials/transport alignment
+Changes:
+Update credentials test endpoint to a guaranteed spec path (e.g., GET /api/clients) instead of /health.
+File: Startpoint_node/src/credentials/StartpointApi.credentials.ts:48 → url: "/api/clients".
+Confirm baseURL behavior and headers (Authorization: Bearer <token>, Content-Type, Accept).
+Acceptance:
+Credentials test in n8n passes reliably against dev/prod.
+Phase 6: QA, Docs, Packaging
+
+Scope: Validation, docs, release
+Changes:
+Add/review icons for new resources (optional).
+Update README usage and examples for new operations and filters:
+File: README.md (top-level), plus add a guide under Startpoint_node/ if needed.
+Lint/format/build: npm run lint, npm run build in Startpoint_node/.
+Sanity tests with sample flows for each resource:
+Clients: list w/ filters, get by id, meta, history.
+Employees: list filters, get by id, capabilities, deactivate, history.
+Disciplines: list, get by id.
+Projects: list with view/include and filters; history.
+RateTables: list/get/active.
+Timesheets: full CRUD + actions + entries + history.
+Acceptance:
+No TypeScript or ESLint errors; build produces dist.
+Manual runs succeed for each major path; README reflects changed API.
+Dependencies & Sequencing
+
+Phase 1 before others (fixes & baseline).
+Phase 2 can proceed in parallel after Phase 1, but aim to complete Phase 1 first to reduce churn.
+Rate Tables (Phase 3) independent; Timesheets (Phase 4) larger—schedule after Phase 2/3.
+Phase 5 after main features; Phase 6 final.
+Risks & Mitigations
+
+Spec drift: Confirm edge cases (e.g., optional vs required fields) by checking OpenAPI before coding each phase.
+Path parameter leakage into body/query: Validate routing configs; add review checklist per operation.
+Pagination envelopes: Keep responses unmodified so downstream nodes can inspect metadata; include examples in docs.
+Effort Estimate
+
+Phase 1: 0.5–1 day (several small additions + validations).
+Phase 2: 0.5 day (add ops + parameters).
+Phase 3: 0.25 day (3 endpoints).
+Phase 4: 1–1.5 days (many ops and nested entries).
+Phase 5: 0.1 day (credentials test).
+Phase 6: 0.5 day (QA, docs, packaging).
+Next Steps
+
+Confirm priority order. I’ll start Phase 1 by:
+Adding client/employee list filters and “get by id” for client/employee/discipline.
+Adding project projectNumber filter and task extra fields.
+Preparing PR-ready changes in Startpoint_node/src/nodes/Startpoint/StartpointDescription.ts and adjusting Startpoint_node/src/credentials/StartpointApi.credentials.ts in Phase 5.

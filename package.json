@@ -1,0 +1,58 @@
+{
+  "name": "n8n-nodes-smb-suite",
+  "version": "0.1.0",
+  "description": "N8N nodes for SMB suite: Startpoint ERP and UI Events dashboard integration",
+  "keywords": [
+    "n8n-community-node-package"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/DLTKFrancescoCarbone/Stratpoint_N8N",
+  "author": {
+    "name": "Francesco Carbone",
+    "email": "FrancescoCarbone@Deltek.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DLTKFrancescoCarbone/Stratpoint_N8N.git"
+  },
+  "engines": {
+    "node": ">=20.15"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "npx rimraf dist && tsc -p . && gulp build:icons",
+    "dev": "tsc --watch",
+    "format": "prettier src --write",
+    "lint": "eslint src package.json",
+    "lintfix": "eslint src package.json --fix",
+    "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js src package.json",
+    "docker:build": "npm run build && docker build -t startpoint-n8n .",
+    "docker:run": "docker run -p 5678:5678 startpoint-n8n"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/StartpointApi.credentials.js",
+      "dist/credentials/UiEventsApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Startpoint/Startpoint.node.js",
+      "dist/nodes/UiEvents/UiEvents.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "~8.32.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-n8n-nodes-base": "^1.16.3",
+    "gulp": "^5.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2",
+    "n8n-workflow": "1.82.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}
