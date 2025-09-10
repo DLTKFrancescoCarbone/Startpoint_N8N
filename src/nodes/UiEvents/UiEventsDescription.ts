@@ -259,8 +259,8 @@ const widgetStateFields: INodeProperties[] = [
   {
     displayName: 'Data (JSON)',
     name: 'data',
-    type: 'string',
-    default: '{}',
+    type: 'json',
+    default: {},
     typeOptions: { rows: 4 },
     displayOptions: { show: { resource: ['widgetState'], operation: ['update_data'] } },
     
@@ -545,8 +545,8 @@ const shadcnFields: INodeProperties[] = [
   
 
   // Table
-  { displayName: 'Headers', name: 'headers', type: 'json', default: '[]', description: 'JSON array of strings', displayOptions: { show: { resource: ['shadcn'], operation: ['set_shadcn_table'] } } },
-  { displayName: 'Rows', name: 'rows', type: 'json', default: '[]', description: 'JSON array of rows (string|number)[]', displayOptions: { show: { resource: ['shadcn'], operation: ['set_shadcn_table'] } } },
+  { displayName: 'Headers', name: 'headers', type: 'json', default: [], description: 'JSON array of strings', displayOptions: { show: { resource: ['shadcn'], operation: ['set_shadcn_table'] } } },
+  { displayName: 'Rows', name: 'rows', type: 'json', default: [], description: 'JSON array of rows (string|number)[]', displayOptions: { show: { resource: ['shadcn'], operation: ['set_shadcn_table'] } } },
   { displayName: 'Class Name', name: 'className', type: 'string', default: '', displayOptions: { show: { resource: ['shadcn'], operation: ['set_shadcn_table'] } } },
   
 
