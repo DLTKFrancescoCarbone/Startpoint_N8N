@@ -45,6 +45,8 @@ export class UiEvents implements INodeType {
           { name: 'Widget State', value: 'widgetState' },
           { name: 'Recharts', value: 'recharts' },
           { name: 'Shadcn UI', value: 'shadcn' },
+          { name: 'Server State', value: 'serverState' },
+          { name: 'Audit', value: 'audit' },
         ],
         default: 'widgetState',
       },
