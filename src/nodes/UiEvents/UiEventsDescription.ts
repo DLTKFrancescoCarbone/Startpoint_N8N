@@ -43,22 +43,80 @@ const baseEventExpr = `({
   ts: $parameter.ts,
 })`;
 
-// Builders used in routing bodies
-const chartBodyBuilder = (chartType: 'LineChart' | 'BarChart') =>
-  `={{(e => {
-    const ops:any[] = [];
-    if ($parameter.headline) ops.push({ type: 'setHeadline', value: $parameter.headline });
-    if ($parameter.severity) ops.push({ type: 'setSeverity', value: $parameter.severity });
-    if ($parameter.badge?.properties && ($parameter.badge.properties.type || $parameter.badge.properties.text)) ops.push({ type: 'setBadge', value: $parameter.badge.properties });
-    if ($parameter.note) ops.push({ type: 'setNote', value: $parameter.note });
-    if ($parameter.cta?.properties && $parameter.cta.properties.text) ops.push({ type: 'setCta', value: $parameter.cta.properties });
-    const yKeysArr = ($parameter.yKeys?.series || []).map(s => ({ key: s.key, color: s.color || undefined }));
-    const payload = { lib: 'recharts', type: '${chartType}', height: $parameter.height || 240, data: (typeof $parameter.data === 'string' ? (() => { try { return JSON.parse($parameter.data); } catch(e) { console.error('JSON Parse Error:', e, 'Data:', $parameter.data); return []; } })() : $parameter.data), xKey: $parameter.xKey, yKeys: yKeysArr };
-    ops.push({ type: 'setComponent', value: payload });
-    e.ops = ops; return e; })(${baseEventExpr})}}`;
+// Simplified chart body builder - avoids complex JavaScript, uses direct JSON parsing
+const simpleChartBody = (chartType: 'LineChart' | 'BarChart') =>
+  `={{
+    JSON.stringify({
+      type: 'WidgetUpdate',
+      version: '1.0',
+      widgetId: $parameter.widgetId,
+      ops: [
+        ...(($parameter.headline) ? [{ type: 'setHeadline', value: $parameter.headline }] : []),
+        ...(($parameter.severity) ? [{ type: 'setSeverity', value: $parameter.severity }] : []),
+        ...(($parameter.note) ? [{ type: 'setNote', value: $parameter.note }] : []),
+        {
+          type: 'setComponent',
+          value: {
+            lib: 'recharts',
+            type: '${chartType}',
+            height: $parameter.height || 240,
+            data: JSON.parse($parameter.data || '[]'),
+            xKey: $parameter.xKey || 'name',
+            yKeys: ($parameter.yKeys?.series || []).map(s => ({ key: s.key, color: s.color || undefined }))
+          }
+        }
+      ],
+      agent: {
+        name: $parameter.agentName,
+        runId: $parameter.runId
+      },
+      ts: $parameter.ts || new Date().toISOString()
+    })
+  }}}`;
 
+const simpleShadcnBody = (type: string, propsExpr: string) =>
+  `={{
+    JSON.stringify({
+      type: 'WidgetUpdate',
+      version: '1.0',
+      widgetId: $parameter.widgetId,
+      ops: [{
+        type: 'setComponent',
+        value: {
+          lib: 'shadcn',
+          type: '${type}',
+          props: ${propsExpr}
+        }
+      }],
+      agent: {
+        name: $parameter.agentName,
+        runId: $parameter.runId
+      },
+      ts: $parameter.ts || new Date().toISOString()
+    })
+  }}}`;
+
+const simpleWidgetStateBody = (opType: string, valueExpr: string) =>
+  `={{
+    JSON.stringify({
+      type: 'WidgetUpdate',
+      version: '1.0',
+      widgetId: $parameter.widgetId,
+      ops: [{
+        type: '${opType}',
+        value: ${valueExpr}
+      }],
+      agent: {
+        name: $parameter.agentName,
+        runId: $parameter.runId
+      },
+      ts: $parameter.ts || new Date().toISOString()
+    })
+  }}}`;
+
+// Legacy complex builders (to be replaced gradually)
 const shadcnBody = (type: string, propsExpr: string) =>
-  `={{(e => { e.ops = [{ type: 'setComponent', value: { lib: 'shadcn', type: '${type}', props: ${propsExpr} } }]; return e; })(${baseEventExpr})}}`;
+  simpleShadcnBody(type, propsExpr);
 
 // Widget State operations
 const widgetStateOperation: INodeProperties = {
@@ -68,7 +126,7 @@ const widgetStateOperation: INodeProperties = {
   noDataExpression: true,
   displayOptions: { show: { resource: ['widgetState'] } },
   options: [
-    { name: 'Set Headline', value: 'set_headline', action: 'Set widget headline', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'setHeadline', value: $parameter.headline ?? '' }); return e; })(${baseEventExpr})}}` } } },
+    { name: 'Set Headline', value: 'set_headline', action: 'Set widget headline', routing: { request: { method: 'POST', url: '/publish', body: simpleWidgetStateBody('setHeadline', '$parameter.headline || ""') } } },
     { name: 'Set Severity', value: 'set_severity', action: 'Set widget severity', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'setSeverity', value: $parameter.severity }); return e; })(${baseEventExpr})}}` } } },
     { name: 'Set Badge', value: 'set_badge', action: 'Set widget badge', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'setBadge', value: $parameter.badge?.properties }); return e; })(${baseEventExpr})}}` } } },
     { name: 'Clear Badge', value: 'clear_badge', action: 'Clear widget badge', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'setBadge', value: null }); return e; })(${baseEventExpr})}}` } } },
@@ -297,8 +355,8 @@ const rechartsOperation: INodeProperties = {
   noDataExpression: true,
   displayOptions: { show: { resource: ['recharts'] } },
   options: [
-    { name: 'Set LineChart', value: 'set_recharts_linechart', action: 'Mount LineChart', routing: { request: { method: 'POST', url: '/publish', body: chartBodyBuilder('LineChart') } } },
-    { name: 'Set BarChart', value: 'set_recharts_barchart', action: 'Mount BarChart', routing: { request: { method: 'POST', url: '/publish', body: chartBodyBuilder('BarChart') } } },
+    { name: 'Set LineChart', value: 'set_recharts_linechart', action: 'Mount LineChart', routing: { request: { method: 'POST', url: '/publish', body: simpleChartBody('LineChart') } } },
+    { name: 'Set BarChart', value: 'set_recharts_barchart', action: 'Mount BarChart', routing: { request: { method: 'POST', url: '/publish', body: simpleChartBody('BarChart') } } },
   ],
   default: 'set_recharts_linechart',
 };
