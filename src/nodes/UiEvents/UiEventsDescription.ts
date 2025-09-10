@@ -53,7 +53,7 @@ const chartBodyBuilder = (chartType: 'LineChart' | 'BarChart') =>
     if ($parameter.note) ops.push({ type: 'setNote', value: $parameter.note });
     if ($parameter.cta?.properties && $parameter.cta.properties.text) ops.push({ type: 'setCta', value: $parameter.cta.properties });
     const yKeysArr = ($parameter.yKeys?.series || []).map(s => ({ key: s.key, color: s.color || undefined }));
-    const payload = { lib: 'recharts', type: '${chartType}', height: $parameter.height || 240, data: $parameter.data, xKey: $parameter.xKey, yKeys: yKeysArr };
+    const payload = { lib: 'recharts', type: '${chartType}', height: $parameter.height || 240, data: (typeof $parameter.data === 'string' ? JSON.parse($parameter.data) : $parameter.data), xKey: $parameter.xKey, yKeys: yKeysArr };
     ops.push({ type: 'setComponent', value: payload });
     e.ops = ops; return e; })(${baseEventExpr})}}`;
 
@@ -76,7 +76,7 @@ const widgetStateOperation: INodeProperties = {
     { name: 'Clear Note', value: 'clear_note', action: 'Clear widget note', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'setNote', value: null }); return e; })(${baseEventExpr})}}` } } },
     { name: 'Set CTA', value: 'set_cta', action: 'Set widget CTA', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'setCta', value: $parameter.cta?.properties }); return e; })(${baseEventExpr})}}` } } },
     { name: 'Clear CTA', value: 'clear_cta', action: 'Clear widget CTA', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'setCta', value: null }); return e; })(${baseEventExpr})}}` } } },
-    { name: 'Update Data', value: 'update_data', action: 'Replace widget data blob', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'updateData', value: $parameter.data }); return e; })(${baseEventExpr})}}` } } },
+    { name: 'Update Data', value: 'update_data', action: 'Replace widget data blob', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'updateData', value: (typeof $parameter.data === 'string' ? JSON.parse($parameter.data) : $parameter.data) }); return e; })(${baseEventExpr})}}` } } },
     { name: 'Clear Component', value: 'clear_component', action: 'Unmount current component', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { e.ops.push({ type: 'setComponent', value: null }); return e; })(${baseEventExpr})}}` } } },
     { name: 'Set Widget State (multi)', value: 'set_widget_state', action: 'Set multiple state fields', routing: { request: { method: 'POST', url: '/publish', body: `={{(e => { const ops:any[]=[]; if ($parameter.headline) ops.push({type:'setHeadline',value:$parameter.headline}); if($parameter.severity) ops.push({type:'setSeverity',value:$parameter.severity}); if($parameter.badge?.properties&&($parameter.badge.properties.type||$parameter.badge.properties.text)) ops.push({type:'setBadge',value:$parameter.badge.properties}); if($parameter.note) ops.push({type:'setNote',value:$parameter.note}); if($parameter.cta?.properties&&$parameter.cta.properties.text) ops.push({type:'setCta',value:$parameter.cta.properties}); e.ops=ops; return e; })(${baseEventExpr})}}` } } },
   ],
@@ -205,7 +205,7 @@ const widgetStateFields: INodeProperties[] = [
   {
     displayName: 'Data (JSON)',
     name: 'data',
-    type: 'json',
+    type: 'string',
     default: '{}',
     typeOptions: { rows: 4 },
     displayOptions: { show: { resource: ['widgetState'], operation: ['update_data'] } },
@@ -327,7 +327,7 @@ const rechartsCommonFields: INodeProperties[] = [
   { displayName: 'X Key', name: 'xKey', type: 'string', default: 'name', required: true, displayOptions: { show: { resource: ['recharts'] } } },
   seriesCollection,
   { displayName: 'Height', name: 'height', type: 'number', default: 240, displayOptions: { show: { resource: ['recharts'] } } },
-  { displayName: 'Data (JSON array)', name: 'data', type: 'json', default: '[]', typeOptions: { rows: 4 }, displayOptions: { show: { resource: ['recharts'] } } },
+  { displayName: 'Data (JSON array)', name: 'data', type: 'string', default: '[]', typeOptions: { rows: 4 }, displayOptions: { show: { resource: ['recharts'] } } },
   // Convenience: optional state fields
   { displayName: 'Headline', name: 'headline', type: 'string', default: '', displayOptions: { show: { resource: ['recharts'] } } },
   { displayName: 'Severity', name: 'severity', type: 'options', options: [
