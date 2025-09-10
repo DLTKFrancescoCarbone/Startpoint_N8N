@@ -7,19 +7,10 @@ USER root
 # Set the working directory for the custom node installation
 WORKDIR /home/node/.n8n/custom
 
-# --- Startpoint node ---
-WORKDIR /home/node/.n8n/custom/Startpoint_node
-COPY Stratpoint_N8N/Startpoint_node/package*.json ./
+# --- SMB Suite (merged Startpoint + UI Events nodes) ---
+COPY package*.json ./
 RUN npm install --include=dev --silent
-COPY Stratpoint_N8N/Startpoint_node/. .
-RUN npm run build
-RUN npm prune --omit=dev --silent
-
-# --- UI Spike node ---
-WORKDIR /home/node/.n8n/custom/ui-spike-n8n
-COPY ui-spike-n8n/package*.json ./
-RUN npm install --include=dev --silent
-COPY ui-spike-n8n/. .
+COPY . .
 RUN npm run build
 RUN npm prune --omit=dev --silent
 
