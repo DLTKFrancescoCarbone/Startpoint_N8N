@@ -373,6 +373,7 @@ const seriesCollection: INodeProperties = {
   typeOptions: { multipleValues: true },
   description: 'Series definitions',
   default: {},
+  displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart', 'set_recharts_barchart'] } },
   options: [
     {
       name: 'series',
@@ -386,26 +387,26 @@ const seriesCollection: INodeProperties = {
 };
 
 const rechartsCommonFields: INodeProperties[] = [
-  ...commonMetaFields.map((f) => ({ ...f, displayOptions: { show: { resource: ['recharts'] } } })),
-  { displayName: 'X Key', name: 'xKey', type: 'string', default: 'name', required: true, displayOptions: { show: { resource: ['recharts'] } } },
+  ...commonMetaFields.map((f) => ({ ...f, displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart', 'set_recharts_barchart'] } } })),
+  { displayName: 'X Key', name: 'xKey', type: 'string', default: 'name', required: true, displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart', 'set_recharts_barchart'] } } },
   seriesCollection,
-  { displayName: 'Height', name: 'height', type: 'number', default: 300, displayOptions: { show: { resource: ['recharts'] } } },
-  { displayName: 'Data (JSON array)', name: 'data', type: 'string', default: '[]', typeOptions: { rows: 4 }, displayOptions: { show: { resource: ['recharts'] } } },
+  { displayName: 'Height', name: 'height', type: 'number', default: 300, displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart', 'set_recharts_barchart'] } } },
+  { displayName: 'Data (JSON array)', name: 'data', type: 'json', default: [], typeOptions: { rows: 4 }, displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart', 'set_recharts_barchart'] } } },
   // Convenience: optional state fields
-  { displayName: 'Headline', name: 'headline', type: 'string', default: '', displayOptions: { show: { resource: ['recharts'] } } },
+  { displayName: 'Headline', name: 'headline', type: 'string', default: '', displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart', 'set_recharts_barchart'] } } },
   { displayName: 'Severity', name: 'severity', type: 'options', options: [
     { name: '— none —', value: '' }, { name: 'none', value: 'none' }, { name: 'low', value: 'low' }, { name: 'medium', value: 'medium' }, { name: 'high', value: 'high' }, { name: 'critical', value: 'critical' },
-  ], default: '', displayOptions: { show: { resource: ['recharts'] } } },
+  ], default: '', displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart', 'set_recharts_barchart'] } } },
   { displayName: 'Badge', name: 'badge', type: 'fixedCollection', typeOptions: { multipleValues: false }, default: {}, options: [{ name: 'properties', displayName: 'Properties', values: [
     { displayName: 'Type', name: 'type', type: 'string', default: '' },
     { displayName: 'Count', name: 'count', type: 'number', default: 0 },
     { displayName: 'Text', name: 'text', type: 'string', default: '' },
-  ] }], displayOptions: { show: { resource: ['recharts'] } } },
-  { displayName: 'Note', name: 'note', type: 'string', default: '', displayOptions: { show: { resource: ['recharts'] } } },
+  ] }], displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart', 'set_recharts_barchart'] } } },
+  { displayName: 'Note', name: 'note', type: 'string', default: '', displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart', 'set_recharts_barchart'] } } },
   { displayName: 'CTA', name: 'cta', type: 'fixedCollection', typeOptions: { multipleValues: false }, default: {}, options: [{ name: 'properties', displayName: 'Properties', values: [
     { displayName: 'Text', name: 'text', type: 'string', default: '' },
     { displayName: 'URL', name: 'url', type: 'string', default: '' },
-  ] }], displayOptions: { show: { resource: ['recharts'] } } },
+  ] }], displayOptions: { show: { resource: ['recharts'], operation: ['set_recharts_linechart', 'set_recharts_barchart'] } } },
 ];
 
 
