@@ -59,10 +59,10 @@ const simpleChartBody = (chartType: 'LineChart' | 'BarChart') =>
           value: {
             lib: 'recharts',
             type: '${chartType}',
-            height: $parameter.height || 240,
+            height: $parameter.height || 300,
             data: JSON.parse($parameter.data || '[]'),
             xKey: $parameter.xKey || 'name',
-            yKeys: ($parameter.yKeys?.series || []).map(s => ({ key: s.key, color: s.color || undefined }))
+            yKeys: ($parameter.yKeys?.series || []).map(s => typeof s === 'string' ? s : ({ key: s.key, color: s.color || undefined }))
           }
         }
       ],
@@ -371,8 +371,8 @@ const rechartsOperation: INodeProperties = {
   options: [
     { name: 'Set LineChart', value: 'set_recharts_linechart', action: 'Mount LineChart', routing: { request: { method: 'POST', url: '/publish', body: simpleChartBody('LineChart') } } },
     { name: 'Set BarChart', value: 'set_recharts_barchart', action: 'Mount BarChart', routing: { request: { method: 'POST', url: '/publish', body: simpleChartBody('BarChart') } } },
-    { name: 'Set LineChart (Clean)', value: 'set_recharts_linechart_clean', action: 'Mount LineChart with clean JSON', routing: { request: { method: 'POST', url: '/publish', body: `={{JSON.stringify({type: "WidgetUpdate", version: "1.0", widgetId: ($parameter.widgetId || "").toString().trim(), ops: [{type: "setComponent", value: {lib: "recharts", type: "LineChart", data: ($parameter.chartData?.data || $parameter.chartData || []), xKey: ($parameter.xKey || "name").toString().trim(), height: $parameter.height || 240}}], agent: {name: ($parameter.agentName || "n8n-clean").toString().trim(), runId: $parameter.runId || $execution.id}, ts: new Date().toISOString()})}}` } } },
-    { name: 'Set BarChart (Clean)', value: 'set_recharts_barchart_clean', action: 'Mount BarChart with clean JSON', routing: { request: { method: 'POST', url: '/publish', body: `={{JSON.stringify({type: "WidgetUpdate", version: "1.0", widgetId: ($parameter.widgetId || "").toString().trim(), ops: [{type: "setComponent", value: {lib: "recharts", type: "BarChart", data: ($parameter.chartData?.data || $parameter.chartData || []), xKey: ($parameter.xKey || "name").toString().trim(), height: $parameter.height || 240}}], agent: {name: ($parameter.agentName || "n8n-clean").toString().trim(), runId: $parameter.runId || $execution.id}, ts: new Date().toISOString()})}}` } } },
+    { name: 'Set LineChart (Clean)', value: 'set_recharts_linechart_clean', action: 'Mount LineChart with clean JSON', routing: { request: { method: 'POST', url: '/publish', body: `={{JSON.stringify({type: "WidgetUpdate", version: "1.0", widgetId: ($parameter.widgetId || "").toString().trim(), ops: [{type: "setComponent", value: {lib: "recharts", type: "LineChart", data: ($parameter.chartData?.data || $parameter.chartData || []), xKey: ($parameter.xKey || "name").toString().trim(), height: $parameter.height || 300}}], agent: {name: ($parameter.agentName || "n8n-clean").toString().trim(), runId: $parameter.runId || $execution.id}, ts: new Date().toISOString()})}}` } } },
+    { name: 'Set BarChart (Clean)', value: 'set_recharts_barchart_clean', action: 'Mount BarChart with clean JSON', routing: { request: { method: 'POST', url: '/publish', body: `={{JSON.stringify({type: "WidgetUpdate", version: "1.0", widgetId: ($parameter.widgetId || "").toString().trim(), ops: [{type: "setComponent", value: {lib: "recharts", type: "BarChart", data: ($parameter.chartData?.data || $parameter.chartData || []), xKey: ($parameter.xKey || "name").toString().trim(), height: $parameter.height || 300}}], agent: {name: ($parameter.agentName || "n8n-clean").toString().trim(), runId: $parameter.runId || $execution.id}, ts: new Date().toISOString()})}}` } } },
     { name: 'Set BarChart (API)', value: 'set_barchart_api', action: 'Create bar chart via dedicated API', routing: { request: { method: 'POST', url: '=/api/widgets/{{$parameter.widgetId}}/chart/bar' } } },
     { name: 'Set LineChart (API)', value: 'set_linechart_api', action: 'Create line chart via dedicated API', routing: { request: { method: 'POST', url: '=/api/widgets/{{$parameter.widgetId}}/chart/line' } } },
   ],
@@ -402,7 +402,7 @@ const rechartsCommonFields: INodeProperties[] = [
   ...commonMetaFields.map((f) => ({ ...f, displayOptions: { show: { resource: ['recharts'] } } })),
   { displayName: 'X Key', name: 'xKey', type: 'string', default: 'name', required: true, displayOptions: { show: { resource: ['recharts'] } } },
   seriesCollection,
-  { displayName: 'Height', name: 'height', type: 'number', default: 240, displayOptions: { show: { resource: ['recharts'] } } },
+  { displayName: 'Height', name: 'height', type: 'number', default: 300, displayOptions: { show: { resource: ['recharts'] } } },
   { displayName: 'Data (JSON array)', name: 'data', type: 'string', default: '[]', typeOptions: { rows: 4 }, displayOptions: { show: { resource: ['recharts'] } } },
   // Convenience: optional state fields
   { displayName: 'Headline', name: 'headline', type: 'string', default: '', displayOptions: { show: { resource: ['recharts'] } } },
